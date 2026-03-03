@@ -2,6 +2,9 @@ package DataClasses;
 
 import TernemalManager.Colors;
 
+/**
+ * Класс, который описывает объект типа Label
+ */
 public class Label {
 
     private Integer bands; //Поле может быть null

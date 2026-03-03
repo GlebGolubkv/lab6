@@ -22,7 +22,7 @@ public class Replace_if_greater extends Command {
         ClassesManager cm = new ClassesManager();
         MusicBand OldMusicBand = cm.GetMap().get(key);
         MusicBand NewMusicBand = new BandsInputManager().InputBand(scanner);
-        if (NewMusicBand.compareTo(OldMusicBand) > 0) {            // проверить условия сравнения
+        if (NewMusicBand.compareTo(OldMusicBand) > 0) {
             cm.GetMap().put(key, NewMusicBand);
             System.out.println();
             System.out.println("Key " + Colors.GREEN + key + Colors.RESET + " replaced");
@@ -41,7 +41,7 @@ public class Replace_if_greater extends Command {
 
     private int CheckInteger(String key) {
         int newKey;
-        // если не является числом
+
         try {
             newKey = Integer.parseInt(key);
         } catch (NumberFormatException e) {

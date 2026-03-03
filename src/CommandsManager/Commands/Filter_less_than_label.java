@@ -34,7 +34,6 @@ public class Filter_less_than_label extends Command {
 
     private int CheckInteger(String key) {
         int newKey;
-        // если не является числом
         try {
             newKey = Integer.parseInt(key);
         } catch (NumberFormatException e) {

@@ -10,6 +10,9 @@ import java.io.*;
 import java.util.Hashtable;
 
 
+/**
+ * Класс, который позволяет записывать данные в файл
+ */
 public class JsonWriter {
 
     String fileName;
@@ -23,6 +26,7 @@ public class JsonWriter {
 
         //в oldMap записываем копию текущего файла
         Hashtable<Integer, MusicBand> oldMap = new JsonReader(fileName).readFile();
+        oldMap.put(key, musicBand);
 
 
         // создает поток записи в файл. Перезаписывает с нуля
@@ -53,9 +57,8 @@ public class JsonWriter {
 
 
 
-        //в oldMap записываем копию текущего файла
 
-        // создает поток записи в файл.
+        // создает поток записи в файл. Перезаписывает с нуля
 
         try (FileOutputStream file = new FileOutputStream(fileName)) {
 
@@ -70,7 +73,7 @@ public class JsonWriter {
             //выставляем отображение времени в файле
             mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
             //записываем в файл
-            mapper.writeValue(file, newMap); // Jackson сам запишет в UTF-8
+            mapper.writeValue(file, newMap);
 
 
         } catch (IOException e) {
@@ -80,4 +83,3 @@ public class JsonWriter {
     }
 }
 
-// есть мысль сделать перегрузку метода. На вход будет получать HashTable и записывать его полностью

@@ -2,13 +2,10 @@ package CommandsManager.Commands;
 
 import CommandsManager.Command;
 import Data.ClassesManager;
-import DataClasses.MusicBand;
+
 import TernemalManager.Colors;
 
-import java.net.Inet4Address;
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.Map;
+
 
 public class Remove_key extends Command {
     @Override
@@ -42,7 +39,7 @@ public class Remove_key extends Command {
 
     private int CheckInteger(String key) {
         int newKey;
-        // если не является числом
+
         try {
             newKey = Integer.parseInt(key);
         } catch (NumberFormatException e) {

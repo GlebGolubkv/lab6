@@ -17,14 +17,10 @@ public class Insert extends Command {
     @Override
     public void execute(String value1) {
         ClassesManager classesManager = new ClassesManager();
-        //проверяем ключ
         int key = keyChek(value1);
-        //записываем новый элемент класса
         Scanner scanner = new Scanner(System.in);
         MusicBand musicBand = new BandsInputManager().InputBand(scanner);
-        //сохраняем в коллекцию
         classesManager.addMusicBandToCollection(key, musicBand);
-
 
 
     }
@@ -38,7 +34,7 @@ public class Insert extends Command {
     private int keyChek(String key) {
         int newKey;
 
-        // если не является числом
+
         try {
             newKey = Integer.parseInt(key);
         } catch (NumberFormatException e) {

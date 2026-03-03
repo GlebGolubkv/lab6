@@ -7,6 +7,12 @@ import TernemalManager.Colors;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Класс, который запускает команды
+ * <p>
+ *     Получает на вход команды, далее обращаясь к билдерам, которые создают команды
+ * </p>
+ */
 public class DataCommands {
 
     // список всех команд, поиск по команде
@@ -33,6 +39,10 @@ public class DataCommands {
 
     }
 
+    /**
+     * Метод поучения названий всех команд
+     * @return названия всех команд
+     */
     public ArrayList<String> getNames() {
         return new ArrayList<>(commands.keySet());
     }
@@ -42,10 +52,18 @@ public class DataCommands {
         commands.put(commandName, commandBuilder);
     }
 
+
     public CommandBuilder getCommand(String commandName) {
         return commands.get(commandName);
     }
 
+    /**
+     * Метод, который запускает команду.
+     * <p>
+     *     Он проверяет сколько переменных было введено, далее создает подходящую команду и передает в нее переменные
+     * </p>
+     * @param commandName
+     */
     public void createCommandByName(String commandName) {
         commandName = commandName.trim().toLowerCase();
         if (commandName.split("\\s+").length == 1) {

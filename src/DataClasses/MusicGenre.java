@@ -1,5 +1,8 @@
 package DataClasses;
 
+/**
+ * enum MusicGenre
+ */
 public enum MusicGenre {
     SOUL,
     BLUES,

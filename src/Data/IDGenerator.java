@@ -4,6 +4,12 @@ import DataClasses.MusicBand;
 
 import java.util.Hashtable;
 
+/**
+ * Класс генерирует ID
+ * <p>
+ *     Он создает ID больший на 1, чем максимальный
+ * </p>
+ */
 public class IDGenerator {
 
     public int generateNewID() {
@@ -11,7 +17,7 @@ public class IDGenerator {
         int maxId = 1;
 
 
-        Hashtable<Integer, MusicBand> Map =  ClassesManager.getCopyOfMap();
+        Hashtable<Integer, MusicBand> Map = ClassesManager.getCopyOfMap();
 
         for (MusicBand mb : Map.values()) {
             if (maxId <= mb.getId()) {

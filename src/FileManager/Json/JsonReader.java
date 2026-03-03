@@ -11,7 +11,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Hashtable;
 
-
+/**
+ * Класс, который позволяет читать данные из файла
+ */
 public class JsonReader {
 
     String fileName;
@@ -28,7 +30,7 @@ public class JsonReader {
             return new Hashtable<>();
         }
 
-        // создаем поток
+
         try (FileInputStream file = new FileInputStream(fileName)) {
 
             ObjectMapper mapper = new ObjectMapper();
@@ -39,7 +41,7 @@ public class JsonReader {
             Hashtable<Integer, MusicBand> map = mapper.readValue(file, new TypeReference<Hashtable<Integer, MusicBand>>() {
             });
 
-            return map; // map
+            return map;
 
         } catch (IOException e) {
             throw new RuntimeException(e);

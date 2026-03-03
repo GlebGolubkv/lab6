@@ -10,13 +10,22 @@ import java.time.ZonedDateTime;
 
 import java.util.Scanner;
 
-public class BandsInputManager {                                            //указать требования к полям
+/**
+ * Класс, который позволяет вводить новый объект MusicBand
+ */
 
+public class BandsInputManager {
+
+    /**
+     * Базовый ввод нового объекта
+     * @param scanner
+     * @return введенный MusicBand
+     */
 
     public MusicBand InputBand(Scanner scanner) {
 
         System.out.println();
-        System.out.println( Colors.GREEN + "Enter music band details:" + Colors.RESET);
+        System.out.println(Colors.GREEN + "Enter music band details:" + Colors.RESET);
 
         Integer Id = new IDGenerator().generateNewID(); // ID
 
@@ -42,6 +51,13 @@ public class BandsInputManager {                                            //у
         System.out.println("Вы ввели: " + musicBand);
         return musicBand;
     }
+
+    /**
+     * Кастомный ввод нового обьекта, где ID задается вручную
+     * @param ID
+     * @param scanner
+     * @return Введенный кастомный MusicBand
+     */
 
     public MusicBand InputBand(int ID, Scanner scanner) {
 

@@ -8,6 +8,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * Класс, с помощью которого можно производить чтение команд и их запуск
+ * <p>
+ *     Команды будут читаться построчно. Каждая строка должна содержать одну команду + входные данные для команды при необходимости.
+ * </p>
+ */
 public class CommandsReader {
 
 
@@ -15,6 +21,10 @@ public class CommandsReader {
 
     }
 
+    /**
+     * Метод читает и запускает команды из файла
+     * @param fileName
+     */
     public void readCommands(String fileName) {
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName.trim()));

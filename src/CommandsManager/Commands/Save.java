@@ -8,7 +8,6 @@ public class Save extends Command {
     @Override
     public void execute() {
         ClassesManager classesManager = new ClassesManager();
-        //сохраняем в файл
         classesManager.SaveCollectionToFile();
 
         System.out.println();

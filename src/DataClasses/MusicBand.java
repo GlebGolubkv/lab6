@@ -5,6 +5,9 @@ import TernemalManager.Colors;
 import java.time.ZonedDateTime;
 import java.io.Serializable;
 
+/**
+ * Класс, который описывает объект типа MusicBand
+ */
 public class MusicBand implements Comparable<MusicBand> {
     private Integer id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
@@ -123,6 +126,11 @@ public class MusicBand implements Comparable<MusicBand> {
     }
 
 
+    /**
+     * Объекты сравниваются по 2 полям. Сначала по Label, далее по ID
+     * @param o
+     * @return 1 в случае, если текущий объект больше. 0, если текущий объект равен и -1, если текущий объект меньше.
+     */
     // сравнение по количеству альбомов, далее по количеству Labels, далее по ID
     @Override
     public int compareTo(MusicBand o) {
@@ -141,9 +149,6 @@ public class MusicBand implements Comparable<MusicBand> {
 
     }
 }
-
-
-// дописать генерацию и уникальность полей и сделать интерфейс сортировки comparable
 
 
 

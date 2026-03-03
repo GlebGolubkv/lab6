@@ -10,6 +10,9 @@ import java.nio.file.attribute.FileTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
+/**
+ * Класс считывает дату создания коллекции
+ */
 public class JsonDateReader {
 
     String fileName;
@@ -18,10 +21,13 @@ public class JsonDateReader {
 
     }
 
+    /**
+     * Метод, который считывает дату создания коллекции
+     * @return Дата создания коллекции
+     */
     public String getCreationTime() {
         Path path = Paths.get(fileName);
 
-        // Дата создания (поддерживается не всеми файловыми системами)
         try {
             FileTime creationTime = (FileTime) Files.getAttribute(path, "creationTime");
             ZonedDateTime created = ZonedDateTime.ofInstant(

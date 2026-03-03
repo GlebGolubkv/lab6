@@ -2,6 +2,9 @@ package DataClasses;
 
 import TernemalManager.Colors;
 
+/**
+ * Класс, который описывает объект типа Coordinates
+ */
 public class Coordinates {
     private int x; //Максимальное значение поля: 254
     private double y; //Максимальное значение поля: 93

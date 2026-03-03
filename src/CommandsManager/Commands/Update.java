@@ -19,7 +19,7 @@ public class Update extends Command {
         Scanner scanner = new Scanner(System.in);
 
         int key = RemoveBandByID(CheckInteger(value1));
-        new ClassesManager().GetMap().put(key, new BandsInputManager().InputBand(CheckInteger(value1),scanner));
+        new ClassesManager().GetMap().put(key, new BandsInputManager().InputBand(CheckInteger(value1), scanner));
 
     }
 
@@ -27,7 +27,6 @@ public class Update extends Command {
     public String commandInfo() {
         return "обновить значение элемента коллекции, id которого равен заданному";
     }
-
 
 
     public int RemoveBandByID(int ID) {
@@ -46,7 +45,6 @@ public class Update extends Command {
 
     private int CheckInteger(String key) {
         int newKey;
-        // если не является числом
         try {
             newKey = Integer.parseInt(key);
         } catch (NumberFormatException e) {

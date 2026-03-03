@@ -13,6 +13,11 @@ public enum Colors {
 
     private final String color;
 
+    /**
+     * Enum хранит в себе все цвета, в которые можно красить текст при выводе
+     * @param color
+     */
+
     Colors(String color) {
         this.color = color;
     }

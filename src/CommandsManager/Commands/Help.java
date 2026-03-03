@@ -15,7 +15,7 @@ public class Help extends Command {
         StringBuilder helpCommands = new StringBuilder();
         DataCommands data = new DataCommands();
         for (String name : data.getNames()){
-            StringBuilder append = helpCommands.append(Colors.WHITE + "Command: " + Colors.GREEN)
+            helpCommands.append(Colors.WHITE + "Command: " + Colors.GREEN)
                     .append(name).append(" : " + Colors.RESET).append(data.getCommand(name).getCommandIfo()).append("\n");
 
         }
