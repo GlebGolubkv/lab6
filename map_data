@@ -1,27 +1,42 @@
 {
-  "45" : {
-    "id" : 13,
-    "name" : "fil",
+  "10" : {
+    "id" : 10,
+    "name" : "1",
     "coordinates" : {
-      "x" : 12,
-      "y" : 12.0
+      "x" : 1,
+      "y" : 1.0
     },
-    "creationDate" : "2026-03-10T12:27:49.286126Z",
-    "numberOfParticipants" : 12,
-    "albumsCount" : 12,
+    "creationDate" : "2026-03-07T10:37:05.714558Z",
+    "numberOfParticipants" : 1,
+    "albumsCount" : 1,
     "genre" : "SOUL",
     "label" : {
-      "bands" : 12
+      "bands" : 2
     }
   },
-  "44" : {
-    "id" : 12,
+  "8" : {
+    "id" : 5,
+    "name" : "df",
+    "coordinates" : {
+      "x" : 4,
+      "y" : 4.0
+    },
+    "creationDate" : "2026-03-01T09:21:59.512489Z",
+    "numberOfParticipants" : 452,
+    "albumsCount" : 23442563645765857,
+    "genre" : "BLUES",
+    "label" : {
+      "bands" : 23
+    }
+  },
+  "20320" : {
+    "id" : 14,
     "name" : "fil",
     "coordinates" : {
       "x" : 12,
       "y" : 12.0
     },
-    "creationDate" : "2026-03-10T09:29:01.101516Z",
+    "creationDate" : "2026-03-10T13:17:33.478125Z",
     "numberOfParticipants" : 12,
     "albumsCount" : 12,
     "genre" : "SOUL",
@@ -59,6 +74,21 @@
       "bands" : 1
     }
   },
+  "45" : {
+    "id" : 13,
+    "name" : "fil",
+    "coordinates" : {
+      "x" : 12,
+      "y" : 12.0
+    },
+    "creationDate" : "2026-03-10T12:27:49.286126Z",
+    "numberOfParticipants" : 12,
+    "albumsCount" : 12,
+    "genre" : "SOUL",
+    "label" : {
+      "bands" : 12
+    }
+  },
   "11" : {
     "id" : 8,
     "name" : "3",
@@ -74,64 +104,19 @@
       "bands" : 3
     }
   },
-  "20320" : {
-    "id" : 14,
+  "44" : {
+    "id" : 12,
     "name" : "fil",
     "coordinates" : {
       "x" : 12,
       "y" : 12.0
     },
-    "creationDate" : "2026-03-10T13:17:33.478125Z",
+    "creationDate" : "2026-03-10T09:29:01.101516Z",
     "numberOfParticipants" : 12,
     "albumsCount" : 12,
     "genre" : "SOUL",
     "label" : {
       "bands" : 12
-    }
-  },
-  "10" : {
-    "id" : 10,
-    "name" : "1",
-    "coordinates" : {
-      "x" : 1,
-      "y" : 1.0
-    },
-    "creationDate" : "2026-03-07T10:37:05.714558Z",
-    "numberOfParticipants" : 1,
-    "albumsCount" : 1,
-    "genre" : "SOUL",
-    "label" : {
-      "bands" : 2
-    }
-  },
-  "8" : {
-    "id" : 5,
-    "name" : "df",
-    "coordinates" : {
-      "x" : 4,
-      "y" : 4.0
-    },
-    "creationDate" : "2026-03-01T09:21:59.512489Z",
-    "numberOfParticipants" : 452,
-    "albumsCount" : 23442563645765857,
-    "genre" : "BLUES",
-    "label" : {
-      "bands" : 23
-    }
-  },
-  "7" : {
-    "id" : 4,
-    "name" : "4",
-    "coordinates" : {
-      "x" : 4,
-      "y" : 4.0
-    },
-    "creationDate" : "2026-02-24T20:47:42.25621Z",
-    "numberOfParticipants" : 4,
-    "albumsCount" : 4,
-    "genre" : null,
-    "label" : {
-      "bands" : 4
     }
   }
 }

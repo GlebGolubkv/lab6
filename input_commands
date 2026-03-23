@@ -5,16 +5,17 @@ remove_key 2
 print_field_descending_label
 save
 show
+begin_transaction
 insert 2131241432
 fil
-12
+12vjvvjvjhvj
 12
 12
 12
 soul
 12
 help
-insert
+insert 7
 fil
 12
 12
@@ -23,3 +24,4 @@ fil
 soul
 12
 show
+commit_transaction

@@ -1,5 +1,5 @@
-import Data.DataCommands;
-import Data.DataInitializer;
+import data.DataCommands;
+import data.DataInitializer;
 
 import java.io.IOException;
 import java.util.Scanner;
