@@ -1,0 +1,8 @@
+unnamed package
+commandsmanager
+commandsmanager.сommands
+data
+common.dataclasses
+filemanager.commandsparser
+filemanager.json
+termenalmanager
