@@ -1,7 +1,7 @@
 package server.commands;
 
 import common.dataclasses.MusicBand;
-import server.filemanagar.CommandsReader;
+import server.filemanager.CommandsReader;
 import common.Response;
 
 public class ExecuteScript extends Command {

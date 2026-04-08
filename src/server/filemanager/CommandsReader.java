@@ -1,4 +1,4 @@
-package server.filemanagar;
+package server.filemanager;
 
 import server.data.ClassesManager;
 import server.data.DataCommands;

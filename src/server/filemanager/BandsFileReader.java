@@ -1,4 +1,4 @@
-package server.filemanagar;
+package server.filemanager;
 
 import server.data.generators.IDGenerator;
 import common.dataclasses.Coordinates;

@@ -1,9 +1,8 @@
 package server.data;
 
 import common.JsonDataMapper;
-import server.filemanagar.*;
-import server.filemanagar.BandsFileReader;
-import common.BandsInputTerminal;
+import server.filemanager.*;
+import server.filemanager.BandsFileReader;
 
 /**
  * Centralizes the initialization of all application components.

@@ -1,4 +1,4 @@
-package server.filemanagar;
+package server.filemanager;
 
 import common.JsonDataMapper;
 import common.dataclasses.MusicBand;

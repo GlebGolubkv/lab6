@@ -1,5 +1,6 @@
 package server.head;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import common.dataclasses.CommandType;
 import common.Request;
 import common.Response;
@@ -8,6 +9,7 @@ import common.dataclasses.MusicBand;
 import server.data.generators.IDGenerator;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.*;
 
 public class ServerNetworkManager {
@@ -17,6 +19,7 @@ public class ServerNetworkManager {
     private static final String HOSTNAME = "localhost";
     private static final int bufferSize = 65535;
     private static final SocketAddress socketAddress = new InetSocketAddress(HOSTNAME, PORT);
+    ;
 
 
     public ServerNetworkManager() {
@@ -26,7 +29,7 @@ public class ServerNetworkManager {
     public void start() throws RuntimeException {
 
 
-        try (DatagramSocket socket = new DatagramSocket(socketAddress)){
+        try (DatagramSocket socket = new DatagramSocket(socketAddress)) {
 
             System.out.println("Server started on port: " + PORT);
 
@@ -46,28 +49,18 @@ public class ServerNetworkManager {
 
                 // создание запроса и обработка
                 try {
-                    Request request = Request.fromJson(new String(packet.getData(), 0, packet.getLength(), "UTF-8"));
-                    System.out.println("Got request: " + request.getCommandType() + " : " + request.getArgument());
 
                     // Блок обработки запроса
-                    response = processRequest(request);
+                    response = processRequest(packet);
 
                 } catch (Exception e) {
                     response = new Response(false, "Error while processing request: " + e.getMessage(), null);
                 }
 
                 System.out.println("Success: " + response.isSuccess());
-                //Блок отправки ответа
-                String responseJson = response.toJson();
-                byte[] responseBytes = responseJson.getBytes("UTF-8");
-                packet = new DatagramPacket(responseBytes, responseBytes.length, sender.getAddress(), sender.getPort());
-                try {
-                    socket.send(packet);
-                    System.out.println("Sent request to: " + sender.getAddress() + ":" + sender.getPort());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
+                //Блок отправки ответа
+                sendResponse(response, sender, socket);
 
             }
 
@@ -77,7 +70,10 @@ public class ServerNetworkManager {
     }
 
 
-    private Response processRequest(Request request) {
+    private Response processRequest(DatagramPacket packet) throws IOException {
+
+        Request request = Request.fromJson(new String(packet.getData(), 0, packet.getLength(), "UTF-8"));
+        System.out.println("Got request: " + request.getCommandType() + " : " + request.getArgument());
 
         CommandType commandType = request.getCommandType();
         String commandArgument = request.getArgument();
@@ -95,6 +91,21 @@ public class ServerNetworkManager {
             throw new IllegalArgumentException("Invalid command type");
         }
 
+
+    }
+
+    private void sendResponse(Response response, InetSocketAddress sender, DatagramSocket socket) throws UnsupportedEncodingException, JsonProcessingException {
+        //Блок отправки ответа
+        String responseJson = response.toJson();
+        byte[] responseBytes = responseJson.getBytes("UTF-8");
+        DatagramPacket packet = new DatagramPacket(responseBytes, responseBytes.length);
+        packet = new DatagramPacket(responseBytes, responseBytes.length, sender.getAddress(), sender.getPort());
+        try {
+            socket.send(packet);
+            System.out.println("Sent request to: " + sender.getAddress() + ":" + sender.getPort());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

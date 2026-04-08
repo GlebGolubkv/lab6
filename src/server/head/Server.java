@@ -2,16 +2,20 @@ package server.head;
 
 import server.data.DataInitializer;
 
+import java.util.Scanner;
+
 public class Server {
 
     public static void main(String[] args) {
 
 
-        /*        String fileName = args[0];*/
+        String fileName = args[0];
 
 
         // при желании подставить введение имени файла
-        DataInitializer.initialize("map_data");
+        DataInitializer.initialize(fileName);
+        Scanner scanner = new Scanner(System.in);
+
 
 
 

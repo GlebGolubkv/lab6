@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.dataclasses.MusicBand;
 import common.JsonDataMapper;
-import server.filemanagar.JsonParser;
+import server.filemanager.JsonParser;
 import common.dataclasses.Colors;
 
 
