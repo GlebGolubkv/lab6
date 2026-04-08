@@ -23,8 +23,12 @@ public class Server {
 
 
         try {
-            new ServerTerminalManager().start();
-            new ServerNetworkManager().start();
+            ServerNetworkManager serverNetworkManager = new ServerNetworkManager();
+
+            new ServerTerminalManager(scanner,serverNetworkManager).start();
+            serverNetworkManager.start();
+
+
         } catch (Exception e) {
             System.out.println("Error in server " + e.getMessage());
         }

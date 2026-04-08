@@ -4,6 +4,7 @@ import common.dataclasses.MusicBand;
 import common.dataclasses.CommandType;
 import common.Response;
 import server.commands.*;
+import server.commands.clientcommands.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;

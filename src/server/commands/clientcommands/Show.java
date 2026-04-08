@@ -1,38 +1,29 @@
-package server.commands;
+package server.commands.clientcommands;
 
+import server.commands.Command;
 import server.data.ClassesManager;
 import common.dataclasses.MusicBand;
 import common.Response;
-import common.dataclasses.Colors;
 
-public class BeginTransaction extends Command {
+public class Show extends Command {
     @Override
     public Response execute() {
 
+        StringBuilder stringBuilder = new StringBuilder().append(ClassesManager.getInstance().showCollection());
 
-        try {
-            ClassesManager.getInstance().beginTransaction();
-
-            StringBuilder stringBuilder = new StringBuilder().append("Beginning transaction");
-
-
-            return new Response(true, "BeginTransaction successfully completed." + Colors.RESET, stringBuilder);
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return new Response(true, "Show successfully completed.", stringBuilder);
 
     }
 
     @Override
     public Response execute(String value1) {
+
         throw new IllegalArgumentException("Not supported");
     }
 
     @Override
     public Response execute(String value1, MusicBand value2) {
         throw new IllegalArgumentException("Not supported");
-
     }
 
     @Override
@@ -42,6 +33,6 @@ public class BeginTransaction extends Command {
 
     @Override
     public String commandInfo() {
-        return "начать транзакцию";
+        return "вывести в стандартный поток вывода все элементы коллекции в строковом представлении";
     }
 }

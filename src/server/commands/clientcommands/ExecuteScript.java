@@ -1,6 +1,7 @@
-package server.commands;
+package server.commands.clientcommands;
 
 import common.dataclasses.MusicBand;
+import server.commands.Command;
 import server.filemanager.CommandsReader;
 import common.Response;
 

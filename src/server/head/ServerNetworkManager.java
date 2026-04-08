@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import common.dataclasses.CommandType;
 import common.Request;
 import common.Response;
+import server.commands.servercommands.Save;
 import server.data.DataCommands;
 import common.dataclasses.MusicBand;
 import server.data.generators.IDGenerator;
@@ -19,10 +20,15 @@ public class ServerNetworkManager {
     private static final String HOSTNAME = "localhost";
     private static final int bufferSize = 65535;
     private static final SocketAddress socketAddress = new InetSocketAddress(HOSTNAME, PORT);
-    ;
+    private static final int TIMEOUT = 3000;
+    private volatile boolean shouldShutdown = false;
 
 
     public ServerNetworkManager() {
+    }
+
+    public void makeShutdown() {
+        shouldShutdown = true;
     }
 
 
@@ -31,37 +37,43 @@ public class ServerNetworkManager {
 
         try (DatagramSocket socket = new DatagramSocket(socketAddress)) {
 
+            socket.setSoTimeout(TIMEOUT);
+
             System.out.println("Server started on port: " + PORT);
 
 
-            while (true) {
-                System.out.println();
+            while (!shouldShutdown) {
 
-                byte[] buffer = new byte[bufferSize];
-
-                // создание пакета и прислушивание порта
-                DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-                socket.receive(packet);
-
-                //сохранение отправителя
-                InetSocketAddress sender = new InetSocketAddress(packet.getAddress(), packet.getPort());
-                Response response = null;
-
-                // создание запроса и обработка
                 try {
 
-                    // Блок обработки запроса
-                    response = processRequest(packet);
+                    byte[] buffer = new byte[bufferSize];
 
-                } catch (Exception e) {
-                    response = new Response(false, "Error while processing request: " + e.getMessage(), null);
+                    // создание пакета и прислушивание порта
+                    DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+                    socket.receive(packet);
+
+                    //сохранение отправителя
+                    InetSocketAddress sender = new InetSocketAddress(packet.getAddress(), packet.getPort());
+                    Response response = null;
+
+                    // создание запроса и обработка
+                    try {
+
+                        // Блок обработки запроса
+                        response = processRequest(packet);
+
+                    } catch (Exception e) {
+                        response = new Response(false, "Error while processing request: " + e.getMessage(), null);
+                    }
+
+                    System.out.println("Success: " + response.isSuccess());
+
+                    //Блок отправки ответа
+                    sendResponse(response, sender, socket);
+
+                } catch (SocketTimeoutException e) {
+                    continue;
                 }
-
-                System.out.println("Success: " + response.isSuccess());
-
-                //Блок отправки ответа
-                sendResponse(response, sender, socket);
-
             }
 
         } catch (Exception e) {
@@ -73,6 +85,8 @@ public class ServerNetworkManager {
     private Response processRequest(DatagramPacket packet) throws IOException {
 
         Request request = Request.fromJson(new String(packet.getData(), 0, packet.getLength(), "UTF-8"));
+
+        System.out.println();
         System.out.println("Got request: " + request.getCommandType() + " : " + request.getArgument());
 
         CommandType commandType = request.getCommandType();

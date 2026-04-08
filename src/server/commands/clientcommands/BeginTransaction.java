@@ -1,19 +1,27 @@
-package server.commands;
+package server.commands.clientcommands;
 
-
+import server.commands.Command;
 import server.data.ClassesManager;
 import common.dataclasses.MusicBand;
 import common.Response;
 import common.dataclasses.Colors;
 
-public class Clear extends Command {
+public class BeginTransaction extends Command {
     @Override
     public Response execute() {
-        ClassesManager.getInstance().clearCollection();
 
-        StringBuilder stringBuilder = new StringBuilder().append(Colors.GREEN + "Collection cleared" + Colors.RESET);
 
-        return new Response(true, "Clear successfully completed.", stringBuilder);
+        try {
+            ClassesManager.getInstance().beginTransaction();
+
+            StringBuilder stringBuilder = new StringBuilder().append("Beginning transaction");
+
+
+            return new Response(true, "BeginTransaction successfully completed." + Colors.RESET, stringBuilder);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
@@ -25,6 +33,7 @@ public class Clear extends Command {
     @Override
     public Response execute(String value1, MusicBand value2) {
         throw new IllegalArgumentException("Not supported");
+
     }
 
     @Override
@@ -34,6 +43,6 @@ public class Clear extends Command {
 
     @Override
     public String commandInfo() {
-        return "очистить коллекцию";
+        return "начать транзакцию";
     }
 }

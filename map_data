@@ -1,4 +1,19 @@
 {
+  "8" : {
+    "id" : 5,
+    "name" : "31",
+    "coordinates" : {
+      "x" : 12,
+      "y" : 23.0
+    },
+    "creationDate" : "2026-04-08T19:35:32.122191Z",
+    "numberOfParticipants" : 21,
+    "albumsCount" : 32,
+    "genre" : null,
+    "label" : {
+      "bands" : 213
+    }
+  },
   "7" : {
     "id" : 4,
     "name" : "fuck",

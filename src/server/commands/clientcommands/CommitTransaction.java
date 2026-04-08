@@ -1,22 +1,30 @@
-package server.commands;
+package server.commands.clientcommands;
 
+import server.commands.Command;
 import server.data.ClassesManager;
 import common.dataclasses.MusicBand;
 import common.Response;
 
-public class Show extends Command {
+public class CommitTransaction extends Command {
     @Override
     public Response execute() {
 
-        StringBuilder stringBuilder = new StringBuilder().append(ClassesManager.getInstance().showCollection());
+        try {
+            ClassesManager.getInstance().commitTransaction();
 
-        return new Response(true, "Show successfully completed.", stringBuilder);
+
+            StringBuilder stringBuilder = new StringBuilder().append("Committed transaction");
+
+            return new Response(true, "CommitTransaction successfully completed.", stringBuilder);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
     @Override
     public Response execute(String value1) {
-
         throw new IllegalArgumentException("Not supported");
     }
 
@@ -32,6 +40,6 @@ public class Show extends Command {
 
     @Override
     public String commandInfo() {
-        return "вывести в стандартный поток вывода все элементы коллекции в строковом представлении";
+        return "фиксирует транзакцию";
     }
 }

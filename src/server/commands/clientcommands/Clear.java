@@ -1,24 +1,20 @@
-package server.commands;
+package server.commands.clientcommands;
 
+
+import server.commands.Command;
 import server.data.ClassesManager;
 import common.dataclasses.MusicBand;
 import common.Response;
+import common.dataclasses.Colors;
 
-public class CommitTransaction extends Command {
+public class Clear extends Command {
     @Override
     public Response execute() {
+        ClassesManager.getInstance().clearCollection();
 
-        try {
-            ClassesManager.getInstance().commitTransaction();
+        StringBuilder stringBuilder = new StringBuilder().append(Colors.GREEN + "Collection cleared" + Colors.RESET);
 
-
-            StringBuilder stringBuilder = new StringBuilder().append("Committed transaction");
-
-            return new Response(true, "CommitTransaction successfully completed.", stringBuilder);
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return new Response(true, "Clear successfully completed.", stringBuilder);
 
     }
 
@@ -39,6 +35,6 @@ public class CommitTransaction extends Command {
 
     @Override
     public String commandInfo() {
-        return "фиксирует транзакцию";
+        return "очистить коллекцию";
     }
 }

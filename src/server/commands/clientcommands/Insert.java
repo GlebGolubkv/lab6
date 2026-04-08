@@ -1,5 +1,6 @@
-package server.commands;
+package server.commands.clientcommands;
 
+import server.commands.Command;
 import server.data.ClassesManager;
 import server.data.generators.KeyGenerator;
 import common.dataclasses.MusicBand;
