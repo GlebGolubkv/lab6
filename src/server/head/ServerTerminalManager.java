@@ -20,8 +20,7 @@ public class ServerTerminalManager {
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 
-            ClassesManager.getInstance().saveCollectionToFile();
-            System.out.println("Collection saved");
+            System.out.println(new Save().execute().getMessage());
             System.out.println("Shutting down...");
 
         }));

@@ -34,20 +34,16 @@ public class ClientNetworkManager implements AutoCloseable {
     public Response sendRequest(Request request) throws IOException, InterruptedException {
 
 
-
-
         int sleepMs = 100;
         int maxAttempts = TIMEOUT / sleepMs;
-
 
 
         // подготавливаем request к отправке
         String jsonRequest = request.toJson();
         ByteBuffer requestBuffer = ByteBuffer.wrap(jsonRequest.getBytes(StandardCharsets.UTF_8));
 
-        // отправляем в неблокирующем режиме
-        channel.send(requestBuffer, serverAddress);
 
+        channel.send(requestBuffer, serverAddress);
 
 
         ByteBuffer responseBuffer = ByteBuffer.allocate(BUFFER_SIZE);
@@ -58,7 +54,7 @@ public class ClientNetworkManager implements AutoCloseable {
             responseBuffer.clear();
 
             // получаем пакет и записываем его размер
-            SocketAddress sender  = channel.receive(responseBuffer);
+            SocketAddress sender = channel.receive(responseBuffer);
 
 
             if (sender != null) {

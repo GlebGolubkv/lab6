@@ -14,7 +14,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.*;
 
 import java.time.ZonedDateTime;
-import java.util.logging.Logger;
 
 public class ServerNetworkManager {
 
@@ -25,7 +24,6 @@ public class ServerNetworkManager {
     private static final SocketAddress socketAddress = new InetSocketAddress(HOSTNAME, PORT);
     private static final int TIMEOUT = 3000;
     private volatile boolean shouldShutdown = false;
-
 
 
     public ServerNetworkManager() {
@@ -43,7 +41,7 @@ public class ServerNetworkManager {
 
             socket.setSoTimeout(TIMEOUT);
 
-            System.out.println("Server started on port: " +  PORT);
+            System.out.println("Server started on port: " + PORT);
 
             while (!shouldShutdown) {
 
@@ -117,8 +115,12 @@ public class ServerNetworkManager {
         //Блок отправки ответа
         String responseJson = response.toJson();
         byte[] responseBytes = responseJson.getBytes("UTF-8");
-        DatagramPacket packet = new DatagramPacket(responseBytes, responseBytes.length);
-        packet = new DatagramPacket(responseBytes, responseBytes.length, sender.getAddress(), sender.getPort());
+        if (responseBytes.length > bufferSize) {
+            responseJson = new Response(false, "The answer is too big: " + responseJson.substring(0, bufferSize - 100) + "\"...[TRUNCATED]\"}").toJson();
+            responseBytes = responseJson.getBytes("UTF-8");
+        }
+        DatagramPacket packet = new DatagramPacket(responseBytes, responseBytes.length, sender.getAddress(), sender.getPort());
+
         try {
             socket.send(packet);
             System.out.println("Sent request to: " + sender.getAddress() + ":" + sender.getPort());

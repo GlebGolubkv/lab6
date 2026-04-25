@@ -65,18 +65,17 @@ public class ClientTerminalManager {
             System.out.println("Shouting down...");
             System.exit(0);
         }
-
+        // проверка на 3 и более аргументов
         if (command.length > 2) {
             throw  new IllegalArgumentException("There are too many arguments for the function");
         }
 
-        // Получаем имя
+        // Получаем аргумент
         if (command.length > 1) {
             argumentName = command[1].toLowerCase();
         }
 
 
-        // проверка на 3 и более аргументов
 
         // Проверяем команду
         if (CommandType.contains(command[0])) {

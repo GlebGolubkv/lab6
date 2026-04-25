@@ -133,8 +133,7 @@ public class CommandsReader {
 
         if (Objects.equals(command[0], "execute_script")) {
             if (filesNames.contains(command[1])) {
-                System.out.println(Colors.RED + "A recursion was detected. Executing the file " + Colors.GREEN + command[1] + Colors.RED + " will cause the program to loop. " + Colors.RESET);
-                return true;
+                throw new RuntimeException("A recursion was detected. Executing the file " + command[1]  + " will cause the program to loop. ");
             } else {
                 filesNames.add(command[1]);
             }
