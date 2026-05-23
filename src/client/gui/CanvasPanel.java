@@ -1,6 +1,6 @@
-package client.lab8;
+package client.gui;
 
-import common.lab8.MusicBandEntry;
+import common.dataclasses.MusicBandEntry;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
 import javafx.geometry.Point2D;
@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 /**
  * Visualises collection entries with coordinates and sizes; colour per owner.
  */
-public class Lab8CanvasPanel extends StackPane {
+public class CanvasPanel extends StackPane {
 
     private static final Color[] OWNER_COLORS = {
             Color.CORAL, Color.DODGERBLUE, Color.MEDIUMSEAGREEN, Color.GOLD,
@@ -32,9 +32,9 @@ public class Lab8CanvasPanel extends StackPane {
     private final Set<Integer> animatedKeys = new HashSet<>();
     private List<MusicBandEntry> entries = List.of();
     private Consumer<MusicBandEntry> onSelect;
-    private Locale locale = Lab8Localization.LOCALE_RU;
+    private Locale locale = Localization.LOCALE_RU;
 
-    public Lab8CanvasPanel() {
+    public CanvasPanel() {
         getChildren().add(canvas);
         canvas.widthProperty().bind(widthProperty());
         canvas.heightProperty().bind(heightProperty());
@@ -123,11 +123,11 @@ public class Lab8CanvasPanel extends StackPane {
 
     public String infoText(MusicBandEntry entry) {
         var b = entry.getMusicBand();
-        return Lab8Localization.getInstance().get("info.selected") + "\n"
+        return Localization.getInstance().get("info.selected") + "\n"
                 + "key=" + entry.getBandKey() + ", id=" + b.getId() + "\n"
                 + b.getName() + "\n"
-                + "x=" + Lab8Formats.formatNumber(locale, b.getCoordinates().getX())
-                + ", y=" + Lab8Formats.formatNumber(locale, b.getCoordinates().getY());
+                + "x=" + Formats.formatNumber(locale, b.getCoordinates().getX())
+                + ", y=" + Formats.formatNumber(locale, b.getCoordinates().getY());
     }
 
     private record DrawnShape(MusicBandEntry entry, double x, double y, double size) {

@@ -1,4 +1,4 @@
-package client.lab8;
+package client.gui;
 
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -13,11 +13,11 @@ import javafx.stage.Stage;
 /**
  * Lab 8 login / registration window.
  */
-public class Lab8AuthView {
+public class AuthView {
 
-    private final Lab8ClientService service = new Lab8ClientService();
-    private final Lab8Localization loc = Lab8Localization.getInstance();
-    private final java.util.function.Consumer<Lab8Session> onSuccess;
+    private final ClientService service = new ClientService();
+    private final Localization loc = Localization.getInstance();
+    private final java.util.function.Consumer<Session> onSuccess;
 
     private TextField hostField;
     private TextField portField;
@@ -27,7 +27,7 @@ public class Lab8AuthView {
     private ComboBox<java.util.Locale> languageBox;
     private Stage stage;
 
-    public Lab8AuthView(java.util.function.Consumer<Lab8Session> onSuccess) {
+    public AuthView(java.util.function.Consumer<Session> onSuccess) {
         this.onSuccess = onSuccess;
     }
 
@@ -38,7 +38,7 @@ public class Lab8AuthView {
         usernameField = new TextField();
         passwordField = new PasswordField();
         statusLabel = new Label();
-        languageBox = new ComboBox<>(javafx.collections.FXCollections.observableArrayList(Lab8Localization.SUPPORTED));
+        languageBox = new ComboBox<>(javafx.collections.FXCollections.observableArrayList(Localization.SUPPORTED));
         languageBox.setValue(loc.getLocale());
         languageBox.valueProperty().addListener((o, a, b) -> {
             if (b != null) {

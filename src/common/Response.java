@@ -1,7 +1,7 @@
 package common;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import common.lab8.MusicBandEntry;
+import common.dataclasses.MusicBandEntry;
 
 import java.util.List;
 

@@ -1,17 +1,17 @@
-package client.lab8;
+package client.gui;
 
 import client.ClientNetworkManager;
 
 /**
  * Lab 8 client session state after successful authentication.
  */
-public class Lab8Session {
+public class Session {
 
     private final ClientNetworkManager networkManager;
     private final int userId;
     private final String username;
 
-    public Lab8Session(ClientNetworkManager networkManager, int userId, String username) {
+    public Session(ClientNetworkManager networkManager, int userId, String username) {
         this.networkManager = networkManager;
         this.userId = userId;
         this.username = username;

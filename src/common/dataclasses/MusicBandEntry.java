@@ -1,9 +1,7 @@
-package common.lab8;
-
-import common.dataclasses.MusicBand;
+package common.dataclasses;
 
 /**
- * Lab 8 view-model: one element of the collection with map key and owner id.
+ * One element of the collection with map key and owner id (for GUI / get_collection).
  */
 public class MusicBandEntry {
 

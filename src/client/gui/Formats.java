@@ -1,4 +1,4 @@
-package client.lab8;
+package client.gui;
 
 import java.text.NumberFormat;
 import java.time.ZonedDateTime;
@@ -9,9 +9,9 @@ import java.util.Locale;
 /**
  * Locale-aware formatting for numbers and dates (Lab 8).
  */
-public final class Lab8Formats {
+public final class Formats {
 
-    private Lab8Formats() {
+    private Formats() {
     }
 
     public static String formatNumber(Locale locale, long value) {

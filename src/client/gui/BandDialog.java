@@ -1,4 +1,4 @@
-package client.lab8;
+package client.gui;
 
 import common.dataclasses.Coordinates;
 import common.dataclasses.MusicBand;
@@ -18,7 +18,7 @@ import java.util.Optional;
 /**
  * Dialog for creating or editing a {@link MusicBand} (Lab 8).
  */
-public class Lab8BandDialog extends Dialog<MusicBand> {
+public class BandDialog extends Dialog<MusicBand> {
 
     private final TextField nameField = new TextField();
     private final TextField xField = new TextField();
@@ -31,13 +31,13 @@ public class Lab8BandDialog extends Dialog<MusicBand> {
     private final Integer fixedId;
     private final ZonedDateTime creationDate;
 
-    public Lab8BandDialog(Window owner, boolean editMode, MusicBand existing) {
+    public BandDialog(Window owner, boolean editMode, MusicBand existing) {
         this.editMode = editMode;
         this.fixedId = existing != null ? existing.getId() : null;
         this.creationDate = existing != null ? existing.getCreationDate() : ZonedDateTime.now();
         initOwner(owner);
         initModality(Modality.APPLICATION_MODAL);
-        Lab8Localization loc = Lab8Localization.getInstance();
+        Localization loc = Localization.getInstance();
         setTitle(editMode ? loc.get("band.dialog.edit") : loc.get("band.dialog.add"));
 
         genreBox.getItems().addAll(MusicGenre.values());
@@ -74,7 +74,7 @@ public class Lab8BandDialog extends Dialog<MusicBand> {
     private MusicBand buildBand() {
         String name = nameField.getText().trim();
         if (name.isEmpty()) {
-            throw new IllegalArgumentException(Lab8Localization.getInstance().get("error.empty"));
+            throw new IllegalArgumentException(Localization.getInstance().get("error.empty"));
         }
         int x = Integer.parseInt(xField.getText().trim());
         double y = Double.parseDouble(yField.getText().trim());
@@ -87,12 +87,12 @@ public class Lab8BandDialog extends Dialog<MusicBand> {
     }
 
     public static Optional<MusicBand> showCreate(Window owner) {
-        Lab8BandDialog dialog = new Lab8BandDialog(owner, false, null);
+        BandDialog dialog = new BandDialog(owner, false, null);
         return dialog.showAndWait();
     }
 
     public static Optional<MusicBand> showEdit(Window owner, MusicBand existing) {
-        Lab8BandDialog dialog = new Lab8BandDialog(owner, true, existing);
+        BandDialog dialog = new BandDialog(owner, true, existing);
         return dialog.showAndWait();
     }
 }

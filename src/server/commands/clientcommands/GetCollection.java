@@ -1,8 +1,8 @@
-package server.commands.lab8;
+package server.commands.clientcommands;
 
 import common.Response;
 import common.dataclasses.MusicBand;
-import common.lab8.MusicBandEntry;
+import common.dataclasses.MusicBandEntry;
 import server.commands.Command;
 import server.data.ClassesManager;
 import server.postgres.CommandsDAO;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Lab 8 command: returns the in-memory collection with band keys and owner ids.
+ * Returns the in-memory collection with band keys and owner ids (for GUI).
  */
 public class GetCollection extends Command {
 

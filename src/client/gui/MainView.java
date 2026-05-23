@@ -1,9 +1,9 @@
-package client.lab8;
+package client.gui;
 
 import common.Response;
 import common.dataclasses.CommandType;
 import common.dataclasses.MusicBand;
-import common.lab8.MusicBandEntry;
+import common.dataclasses.MusicBandEntry;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -27,16 +27,16 @@ import java.util.Optional;
 /**
  * Main Lab 8 window: table, commands, canvas, i18n, background sync.
  */
-public class Lab8MainView {
+public class MainView {
 
-    private final Lab8Session session;
-    private final Lab8ClientService service = new Lab8ClientService();
-    private final Lab8Localization loc = Lab8Localization.getInstance();
+    private final Session session;
+    private final ClientService service = new ClientService();
+    private final Localization loc = Localization.getInstance();
 
     private Stage stage;
     private TableView<MusicBandEntry> table;
     private TextArea logArea;
-    private Lab8CanvasPanel canvas;
+    private CanvasPanel canvas;
     private Label userLabel;
     private TextField filterField;
     private ComboBox<String> sortColumnBox;
@@ -47,7 +47,7 @@ public class Lab8MainView {
     private List<MusicBandEntry> rawEntries = new ArrayList<>();
     private Timeline pollTimeline;
 
-    public Lab8MainView(Lab8Session session) {
+    public MainView(Session session) {
         this.session = session;
     }
 
@@ -78,7 +78,7 @@ public class Lab8MainView {
 
     private HBox buildTopBar() {
         userLabel = new Label();
-        languageBox = new ComboBox<>(FXCollections.observableArrayList(Lab8Localization.SUPPORTED));
+        languageBox = new ComboBox<>(FXCollections.observableArrayList(Localization.SUPPORTED));
         languageBox.setValue(loc.getLocale());
         languageBox.setCellFactory(cb -> new ListCell<>() {
             @Override
@@ -170,7 +170,7 @@ public class Lab8MainView {
             appendLog("Field edit denied");
             return;
         }
-        Lab8FieldEditDialog.show(stage, entry.getMusicBand()).ifPresent(b ->
+        FieldEditDialog.show(stage, entry.getMusicBand()).ifPresent(b ->
                 runSimpleCommand(CommandType.UPDATE, String.valueOf(b.getId()), b));
     }
 
@@ -193,11 +193,11 @@ public class Lab8MainView {
         table.getColumns().add(col("col.key", e -> String.valueOf(e.getBandKey())));
         table.getColumns().add(col("col.id", e -> String.valueOf(e.getMusicBand().getId())));
         table.getColumns().add(col("col.name", e -> e.getMusicBand().getName()));
-        table.getColumns().add(col("col.x", e -> Lab8Formats.formatNumber(loc.getLocale(), e.getMusicBand().getCoordinates().getX())));
-        table.getColumns().add(col("col.y", e -> Lab8Formats.formatNumber(loc.getLocale(), e.getMusicBand().getCoordinates().getY())));
-        table.getColumns().add(col("col.creation", e -> Lab8Formats.formatDateTime(loc.getLocale(), e.getMusicBand().getCreationDate())));
-        table.getColumns().add(col("col.participants", e -> Lab8Formats.formatNumber(loc.getLocale(), e.getMusicBand().getNumberOfParticipants())));
-        table.getColumns().add(col("col.albums", e -> Lab8Formats.formatNumber(loc.getLocale(), e.getMusicBand().getAlbumsCount())));
+        table.getColumns().add(col("col.x", e -> Formats.formatNumber(loc.getLocale(), e.getMusicBand().getCoordinates().getX())));
+        table.getColumns().add(col("col.y", e -> Formats.formatNumber(loc.getLocale(), e.getMusicBand().getCoordinates().getY())));
+        table.getColumns().add(col("col.creation", e -> Formats.formatDateTime(loc.getLocale(), e.getMusicBand().getCreationDate())));
+        table.getColumns().add(col("col.participants", e -> Formats.formatNumber(loc.getLocale(), e.getMusicBand().getNumberOfParticipants())));
+        table.getColumns().add(col("col.albums", e -> Formats.formatNumber(loc.getLocale(), e.getMusicBand().getAlbumsCount())));
         table.getColumns().add(col("col.genre", e -> e.getMusicBand().getGenre() != null ? e.getMusicBand().getGenre().name() : ""));
         table.getColumns().add(col("col.label", e -> e.getMusicBand().getLabel().getBands() != null ? String.valueOf(e.getMusicBand().getLabel().getBands()) : ""));
         table.getColumns().add(col("col.owner", e -> String.valueOf(e.getOwnerId())));
@@ -218,7 +218,7 @@ public class Lab8MainView {
     }
 
     private VBox buildCanvasPane() {
-        canvas = new Lab8CanvasPanel();
+        canvas = new CanvasPanel();
         canvas.setOnSelect(entry -> {
             table.getSelectionModel().select(entry);
             infoField.setText(canvas.infoText(entry));
@@ -267,7 +267,7 @@ public class Lab8MainView {
     }
 
     private void applyTableFilterSort() {
-        List<MusicBandEntry> view = Lab8CollectionUtils.filterAndSort(
+        List<MusicBandEntry> view = CollectionUtils.filterAndSort(
                 rawEntries,
                 filterField.getText(),
                 sortColumnBox.getValue(),
@@ -289,7 +289,7 @@ public class Lab8MainView {
         TextInputDialog keyDialog = new TextInputDialog();
         keyDialog.setHeaderText(loc.get("band.key"));
         String key = keyDialog.showAndWait().orElse("").trim();
-        Optional<MusicBand> band = Lab8BandDialog.showCreate(stage);
+        Optional<MusicBand> band = BandDialog.showCreate(stage);
         band.ifPresent(b -> runSimpleCommand(CommandType.INSERT, key.isEmpty() ? "0" : key, b));
     }
 
@@ -302,7 +302,7 @@ public class Lab8MainView {
             appendLog("Edit denied: not owner");
             return;
         }
-        Optional<MusicBand> band = Lab8BandDialog.showEdit(stage, entry.getMusicBand());
+        Optional<MusicBand> band = BandDialog.showEdit(stage, entry.getMusicBand());
         band.ifPresent(b -> runSimpleCommand(CommandType.UPDATE, String.valueOf(b.getId()), b));
     }
 
@@ -337,7 +337,7 @@ public class Lab8MainView {
     }
 
     private void onRemoveLower() {
-        Lab8BandDialog.showCreate(stage).ifPresent(b ->
+        BandDialog.showCreate(stage).ifPresent(b ->
                 runSimpleCommand(CommandType.REMOVE_LOWER, null, b));
     }
 
@@ -346,7 +346,7 @@ public class Lab8MainView {
         if (entry == null) {
             return;
         }
-        Lab8BandDialog.showEdit(stage, entry.getMusicBand()).ifPresent(b ->
+        BandDialog.showEdit(stage, entry.getMusicBand()).ifPresent(b ->
                 runSimpleCommand(CommandType.REPLACE_IF_GREATER, String.valueOf(entry.getBandKey()), b));
     }
 
@@ -355,7 +355,7 @@ public class Lab8MainView {
         if (entry == null) {
             return;
         }
-        Lab8BandDialog.showEdit(stage, entry.getMusicBand()).ifPresent(b ->
+        BandDialog.showEdit(stage, entry.getMusicBand()).ifPresent(b ->
                 runSimpleCommand(CommandType.REPLACE_IF_LOWER, String.valueOf(entry.getBandKey()), b));
     }
 

@@ -1,4 +1,4 @@
-package client.lab8;
+package client.gui;
 
 import java.util.HashMap;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Lab 8: localized UI strings stored in this class (four locales).
  */
-public final class Lab8Localization {
+public final class Localization {
 
     public static final Locale LOCALE_RU = Locale.forLanguageTag("ru");
     public static final Locale LOCALE_MK = Locale.forLanguageTag("mk");
@@ -252,12 +252,12 @@ public final class Lab8Localization {
 
     private Locale current = LOCALE_RU;
 
-    private Lab8Localization() {
+    private Localization() {
     }
 
-    private static final Lab8Localization INSTANCE = new Lab8Localization();
+    private static final Localization INSTANCE = new Localization();
 
-    public static Lab8Localization getInstance() {
+    public static Localization getInstance() {
         return INSTANCE;
     }
 

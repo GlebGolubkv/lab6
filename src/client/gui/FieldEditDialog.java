@@ -1,4 +1,4 @@
-package client.lab8;
+package client.gui;
 
 import common.dataclasses.Coordinates;
 import common.dataclasses.MusicBand;
@@ -13,15 +13,15 @@ import java.util.Optional;
 /**
  * Edit a single field of a {@link MusicBand} (Lab 8).
  */
-public final class Lab8FieldEditDialog {
+public final class FieldEditDialog {
 
-    private Lab8FieldEditDialog() {
+    private FieldEditDialog() {
     }
 
     public static Optional<MusicBand> show(Window owner, MusicBand original) {
         Dialog<MusicBand> dialog = new Dialog<>();
         dialog.initOwner(owner);
-        dialog.setTitle(Lab8Localization.getInstance().get("band.dialog.edit"));
+        dialog.setTitle(Localization.getInstance().get("band.dialog.edit"));
 
         ComboBox<String> fieldBox = new ComboBox<>(javafx.collections.FXCollections.observableArrayList(
                 "name", "x", "y", "participants", "albums", "genre", "label"));

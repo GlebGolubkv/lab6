@@ -7,7 +7,6 @@ import server.commands.*;
 import server.commands.clientcommands.*;
 import server.commands.internalcommands.InsertUser;
 import server.commands.internalcommands.LogInUser;
-import server.commands.lab8.GetCollection;
 
 import java.util.ArrayList;
 import java.util.HashMap;

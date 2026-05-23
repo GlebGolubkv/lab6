@@ -1,7 +1,7 @@
-package client.lab8;
+package client.gui;
 
 import common.dataclasses.MusicBand;
-import common.lab8.MusicBandEntry;
+import common.dataclasses.MusicBandEntry;
 
 import java.util.Comparator;
 import java.util.List;
@@ -12,9 +12,9 @@ import java.util.stream.Stream;
 /**
  * Table filter and sort via Stream API (Lab 8 requirement).
  */
-public final class Lab8CollectionUtils {
+public final class CollectionUtils {
 
-    private Lab8CollectionUtils() {
+    private CollectionUtils() {
     }
 
     public static List<MusicBandEntry> filterAndSort(
@@ -45,11 +45,11 @@ public final class Lab8CollectionUtils {
                 String.valueOf(entry.getBandKey()),
                 String.valueOf(b.getId()),
                 b.getName(),
-                Lab8Formats.formatNumber(locale, b.getCoordinates().getX()),
-                Lab8Formats.formatNumber(locale, b.getCoordinates().getY()),
-                Lab8Formats.formatDateTime(locale, b.getCreationDate()),
-                Lab8Formats.formatNumber(locale, b.getNumberOfParticipants()),
-                Lab8Formats.formatNumber(locale, b.getAlbumsCount()),
+                Formats.formatNumber(locale, b.getCoordinates().getX()),
+                Formats.formatNumber(locale, b.getCoordinates().getY()),
+                Formats.formatDateTime(locale, b.getCreationDate()),
+                Formats.formatNumber(locale, b.getNumberOfParticipants()),
+                Formats.formatNumber(locale, b.getAlbumsCount()),
                 b.getGenre() != null ? b.getGenre().name() : "",
                 b.getLabel() != null ? String.valueOf(b.getLabel().getBands()) : "",
                 String.valueOf(entry.getOwnerId())
