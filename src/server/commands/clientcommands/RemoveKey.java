@@ -20,15 +20,16 @@ public class RemoveKey extends Command {
     public Response execute(String value1,int client_id) {
         int key = checkInteger(value1);
         ClassesManager cm = ClassesManager.getInstance();
-        if (CommandsDAO.removeMusicBand(key)) {
+        if (CommandsDAO.removeMusicBand(key, client_id)) {
             cm.removeMusicBandFromCollection(key);
 
             StringBuilder stringBuilder = new StringBuilder().append("Key " + Colors.GREEN + key + Colors.RESET + " removed");
 
-            return new Response(true, "RemoveKey successfully completed.", stringBuilder);
+            return new Response(true, "RemoveKey " + key +  " successfully completed.", stringBuilder);
         } else {
 
-            throw new IllegalArgumentException("Invalid key. Key: " + key);
+            StringBuilder stringBuilder = new StringBuilder().append("Key " + Colors.GREEN + key + Colors.RESET + " cannot be removed. It belong to another owner.");
+           return new Response(false, "The given MusicBand " + key + " doesn't belong to this owner.", stringBuilder);
 
         }
 

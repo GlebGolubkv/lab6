@@ -5,8 +5,8 @@ import common.dataclasses.CommandType;
 import common.Response;
 import server.commands.*;
 import server.commands.clientcommands.*;
-import server.commands.internalcommands.CheckName;
 import server.commands.internalcommands.InsertUser;
+import server.commands.internalcommands.LogInUser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,8 +69,8 @@ public class DataCommands {
         commands.put(CommandType.COUNT_BY_NUMBER_OF_PARTICIPANTS, new CountByNumberOfParticipants());
         commands.put(CommandType.FILTER_LESS_THEN_LABEL, new FilterLessThanLabel());
         commands.put(CommandType.PRINT_FIELD_DESCENDING_LABEL, new PrintFieldDescendingLabel());
-        commands.put(CommandType.CHECK_NAME, new CheckName());
         commands.put(CommandType.INSERT_USER, new InsertUser());
+        commands.put(CommandType.LOG_IN_USER, new LogInUser());
     }
 
     /**

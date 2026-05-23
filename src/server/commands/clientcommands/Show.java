@@ -7,7 +7,7 @@ import common.Response;
 
 public class Show extends Command {
     @Override
-    public Response execute() {
+    public Response execute(int client_id) {
 
         StringBuilder stringBuilder = new StringBuilder().append(ClassesManager.getInstance().showCollection());
 
@@ -16,18 +16,18 @@ public class Show extends Command {
     }
 
     @Override
-    public Response execute(String value1) {
+    public Response execute(String value1,int client_id) {
 
         throw new IllegalArgumentException("Not supported");
     }
 
     @Override
-    public Response execute(String value1, MusicBand value2) {
+    public Response execute(String value1, MusicBand value2,int client_id) {
         throw new IllegalArgumentException("Not supported");
     }
 
     @Override
-    public Response execute(MusicBand value1) {
+    public Response execute(MusicBand value1,int client_id) {
         throw new IllegalArgumentException("Not supported");
     }
 

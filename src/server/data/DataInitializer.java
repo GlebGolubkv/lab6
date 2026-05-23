@@ -23,11 +23,8 @@ public class DataInitializer {
      * Private constructor that performs the actual initialization of all components.
      * It calls the initialize methods of various managers and readers, passing
      * the provided file name where necessary.
-     *
-     * @param fileName the name of the file used for initializing components like
-     *                 JsonWriter, JsonReader, JsonDateReader, JsonCleaner, and ClassesManager
      */
-    private DataInitializer(String fileName) {
+    private DataInitializer() {
 
         ConnectionInitializer.initialize();
         JsonDataMapper.initialize();
@@ -56,12 +53,11 @@ public class DataInitializer {
      * Initializes the singleton instance with the specified file name.
      * This method must be called once before using the instance.
      *
-     * @param fileName the name of the file used for initialization
      * @throws RuntimeException if the instance has not been initialized (due to incorrect error message logic)
      */
-    public static void initialize(String fileName) {
+    public static void initialize() {
         if (instance == null) {
-            instance = new DataInitializer(fileName);
+            instance = new DataInitializer();
         } else {
             throw new RuntimeException("data has not been initialized");
         }

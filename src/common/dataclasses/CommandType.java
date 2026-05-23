@@ -85,9 +85,14 @@ public enum CommandType {
             "обновить элемент по id",
             true,
             true, false),
-    CHECK_NAME("check_name", "проверить существование id",
-            true, false, true),
-    INSERT_USER("insert_user", "добавить пользователя", true, false, true);
+    INSERT_USER("insert_user",
+            "добавить пользователя",
+            true,
+            false, true),
+    LOG_IN_USER("log_in_user",
+            "войти в аккаунт",
+            true,
+            false, true);
 
     private final String commandName;
     private final String description;

@@ -6,6 +6,7 @@ import server.data.ClassesManager;
 
 import java.util.Collections;
 import java.util.Hashtable;
+import java.util.Map;
 
 
 public class KeyGenerator {
@@ -13,7 +14,7 @@ public class KeyGenerator {
     public int generateNewKey() {
 
 
-        Hashtable<Integer, MusicBand> Map =  ClassesManager.getInstance().getMap();
+        Map<Integer, MusicBand> Map =  ClassesManager.getInstance().getCollection();
 
         return Collections.max(Map.keySet()) + 1;
     }

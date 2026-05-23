@@ -9,12 +9,8 @@ public class Server {
     public static void main(String[] args) {
 
 
-        String fileName = args[0];
-
-
-        DataInitializer.initialize(fileName);
+        DataInitializer.initialize();
         Scanner scanner = new Scanner(System.in);
-
 
         try {
             ServerNetworkManager serverNetworkManager = new ServerNetworkManager();

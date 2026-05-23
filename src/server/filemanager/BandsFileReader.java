@@ -1,6 +1,5 @@
 package server.filemanager;
 
-import server.data.generators.IDGenerator;
 import common.dataclasses.Coordinates;
 import common.dataclasses.Label;
 import common.dataclasses.MusicBand;
@@ -65,7 +64,7 @@ public class BandsFileReader {
 
         try {
 
-            Integer Id = new IDGenerator().generateNewID(); // ID
+            Integer Id = 0; // ID
 
             String Name = readName(bufferedReader);  //NAME
 

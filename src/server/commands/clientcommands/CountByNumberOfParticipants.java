@@ -13,21 +13,23 @@ public class CountByNumberOfParticipants extends Command {
     }
 
     @Override
-    public Response execute(String value1,int client_id) {
+    public Response execute(String value1, int client_id) {
+
         ClassesManager classesManager = ClassesManager.getInstance();
         int number_of_participants = checkInteger(value1);
+        long result;
+        synchronized (classesManager) {
+            result = classesManager.getCollection().keySet().stream()
+                    //Превратили в список значений numberOfParticipants
+                    .map(e -> classesManager.getCollection().get(e).getNumberOfParticipants())
+                    // Отфильтровали совпадающие
+                    .filter(e -> e == number_of_participants).count();
 
-
-        long result = classesManager.getMap().keySet().stream()
-                //Превратили в список значений numberOfParticipants
-                .map(e -> classesManager.getMap().get(e).getNumberOfParticipants())
-                // Отфильтровали совпадающие
-                .filter(e -> e == number_of_participants).count();
-
-
-        StringBuilder stringBuilder = new StringBuilder().append("The number participants of equal "
-                + Colors.GREEN + number_of_participants + Colors.RESET +
-                "s is " + Colors.GREEN + result + Colors.RESET);
+        }
+        StringBuilder stringBuilder = new StringBuilder()
+                .append("The number participants of equal " + Colors.GREEN)
+                .append(number_of_participants).append(Colors.RESET).append("s is ")
+                .append(Colors.GREEN).append(result).append(Colors.RESET);
 
 
         return new Response(true, "CountByNumberOfParticipants successfully completed.", stringBuilder);
@@ -35,12 +37,12 @@ public class CountByNumberOfParticipants extends Command {
     }
 
     @Override
-    public Response execute(String value1, MusicBand value2,int client_id) {
+    public Response execute(String value1, MusicBand value2, int client_id) {
         throw new IllegalArgumentException("Not supported");
     }
 
     @Override
-    public Response execute(MusicBand value1,int client_id) {
+    public Response execute(MusicBand value1, int client_id) {
         throw new IllegalArgumentException("Not supported");
     }
 

@@ -6,23 +6,13 @@ print_field_descending_label
 save
 show
 begin_transaction
-insert 2131241432
+remove_lower
 fil
-12vjvvjvjhvj
+12
 12
 12
 12
 soul
 12
 help
-insert 7
-fuck
-12
-12
-12
-12
-soul
-12
-begin_transaction
 show
-commit_transaction

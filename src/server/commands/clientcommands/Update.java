@@ -6,7 +6,7 @@ import common.dataclasses.MusicBand;
 import common.Response;
 import server.postgres.CommandsDAO;
 
-import java.util.Hashtable;
+import java.util.Map;
 
 public class Update extends Command {
 
@@ -23,11 +23,14 @@ public class Update extends Command {
 
     @Override
     public Response execute(String value1, MusicBand value2, int client_id) {
+        Map<Integer, MusicBand> collection = ClassesManager.getInstance().getCollection();
         StringBuilder stringBuilder = new StringBuilder();
         int id = CheckInteger(value1);
         if (CommandsDAO.updateMusicBandById(id, value2, client_id)) {
-            int key = RemoveBandByID(id, stringBuilder);
-            ClassesManager.getInstance().getMap().put(key, value2);
+            synchronized (collection) {
+                int key = removeBandByID(id, stringBuilder);
+                collection.put(key, value2);
+            }
             return new Response(true, "Update  successfully completed.", stringBuilder);
 
         }
@@ -47,8 +50,8 @@ public class Update extends Command {
     }
 
 
-    public int RemoveBandByID(int ID, StringBuilder stringBuilder) {
-        Hashtable<Integer, MusicBand> map = ClassesManager.getInstance().getMap();
+    public int removeBandByID(int ID, StringBuilder stringBuilder) {
+        Map<Integer, MusicBand> map = ClassesManager.getInstance().getCollection();
 
         for (int key : map.keySet()) {
             if (ID == map.get(key).getId()) {

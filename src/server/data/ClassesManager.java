@@ -1,15 +1,15 @@
 package server.data;
 
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import common.dataclasses.MusicBand;
-import common.JsonDataMapper;
+
 import common.dataclasses.Colors;
 import server.postgres.CommandsDAO;
 
 
-import java.util.Hashtable;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -18,19 +18,17 @@ import java.util.stream.Collectors;
  * Implements the Singleton pattern to ensure a single instance of the collection manager.
  * The collection is stored in a Hashtable with Integer keys and MusicBand values.
  */
-public class ClassesManager {                           // переписать метод tostring в отдельный метод
+public class ClassesManager {
     private static ClassesManager instance;
-    private Hashtable<Integer, MusicBand> Map;
-    private boolean inTransaction = false;
-    private Hashtable<Integer, MusicBand> tempMap;
+
+    private final Map<Integer, MusicBand> collection = Collections.synchronizedMap(new HashMap<Integer, MusicBand>());
 
 
     /**
      * Private constructor that initializes the collection by reading data from a file.
      */
     private ClassesManager() {
-//        Map = JsonParser.getInstance().readAllClassesAtFile();
-        Map = CommandsDAO.readFromPostgres();
+        collection.putAll(CommandsDAO.readFromPostgres());
     }
 
     /**
@@ -89,7 +87,7 @@ public class ClassesManager {                           // переписать 
      *
      * @return the Hashtable containing MusicBand objects keyed by Integer
      */
-    public Hashtable<Integer, MusicBand> getMap() {
+    public Map<Integer, MusicBand> getCollection() {
         return getActiveMap();
     }
 
@@ -125,62 +123,34 @@ public class ClassesManager {                           // переписать 
 
     @Override
     public String toString() {
-        StringBuilder s = new StringBuilder();
+        synchronized (collection) {
+            StringBuilder s = new StringBuilder();
+            for (Integer key : getActiveMap().keySet()) {
+                s.append(Colors.GREEN)
+                        .append("Key: ").append(Colors.RESET).append(key).append("\n")
+                        .append(Colors.GREEN).append(" Value: ").append(Colors.RESET)
+                        .append(getActiveMap().get(key).toString()).append("\n");
 
-        for (Integer key : getActiveMap().keySet()) {
-            s.append(Colors.GREEN)
-                    .append("Key: ").append(Colors.RESET).append(key).append("\n")
-                    .append(Colors.GREEN).append(" Value: ").append(Colors.RESET)
-                    .append(getActiveMap().get(key).toString()).append("\n");
-
+            }
+            return s.toString();
         }
-        return s.toString();
     }
 
     public String showCollection() {
-        return getActiveMap().keySet()
-                .stream()
-                .sorted((a, b) -> (getActiveMap().get(b).getName().compareTo(getActiveMap().get(a).getName())))
-                .map(key -> Colors.GREEN + "Key: " + Colors.RESET + key + Colors.GREEN +
-                        "\nValue: " + Colors.RESET + getActiveMap().get(key).toString() + Colors.RESET + "\n")
-                .collect(Collectors.joining());
-
-    }
-
-
-    /**
-     * Removes all elements from the collection.
-     */
-    public void clearCollection() {
-        getActiveMap().clear();
-    }
-
-
-    private Hashtable<Integer, MusicBand> deepCopy(Hashtable<Integer, MusicBand> original) {
-        try {
-            ObjectMapper mapper = JsonDataMapper.getInstance().getMapper();
-            String json = mapper.writeValueAsString(original);
-            return mapper.readValue(json, new TypeReference<Hashtable<Integer, MusicBand>>() {
-            });
-
-
-        } catch (Exception e) {
-            throw new RuntimeException("Error: error creating a deep copy", e);
+        synchronized (collection) {
+            return getActiveMap().keySet()
+                    .stream()
+                    .sorted((a, b) -> (getActiveMap().get(b).getName().compareTo(getActiveMap().get(a).getName())))
+                    .map(key -> Colors.GREEN + "Key: " + Colors.RESET + key + Colors.GREEN +
+                            "\nValue: " + Colors.RESET + getActiveMap().get(key).toString() + Colors.RESET + "\n")
+                    .collect(Collectors.joining());
         }
+
     }
 
 
-    public boolean isInTransaction() {
-        return inTransaction;
-    }
-
-
-    private Hashtable<Integer, MusicBand> getActiveMap() {
-        if (isInTransaction()) {
-            return tempMap;
-        } else {
-            return Map;
-        }
+    private Map<Integer, MusicBand> getActiveMap() {
+        return collection;
     }
 
 }

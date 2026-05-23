@@ -12,12 +12,13 @@ public class PrintFieldDescendingLabel extends Command {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Labels: ");
 
+        synchronized (ClassesManager.getInstance().getCollection()) {
 
-        ClassesManager.getInstance().getMap().keySet().stream()
-                .map(e -> ClassesManager.getInstance().getMap().get(e).getLabel().getBands())
-                .sorted((a, b) -> b - a)
-                .forEach(e -> stringBuilder.append(e).append(" "));
-
+            ClassesManager.getInstance().getCollection().keySet().stream()
+                    .map(e -> ClassesManager.getInstance().getCollection().get(e).getLabel().getBands())
+                    .sorted((a, b) -> b - a)
+                    .forEach(e -> stringBuilder.append(e).append(" "));
+        }
 
         return new Response(true, "PrintFieldDescendingLabel successfully completed.", stringBuilder);
 
@@ -26,17 +27,17 @@ public class PrintFieldDescendingLabel extends Command {
 
 
     @Override
-    public Response execute(String value1,int client_id) {
+    public Response execute(String value1, int client_id) {
         throw new IllegalArgumentException("Not supported");
     }
 
     @Override
-    public Response execute(String value1, MusicBand value2,int client_id) {
+    public Response execute(String value1, MusicBand value2, int client_id) {
         throw new IllegalArgumentException("Not supported");
     }
 
     @Override
-    public Response execute(MusicBand value1,int client_id) {
+    public Response execute(MusicBand value1, int client_id) {
         throw new IllegalArgumentException("Not supported");
     }
 

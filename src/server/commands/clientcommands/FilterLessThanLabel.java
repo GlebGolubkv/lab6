@@ -14,17 +14,18 @@ public class FilterLessThanLabel extends Command {
 
 
     @Override
-    public Response execute(String value1,int client_id) {
+    public Response execute(String value1, int client_id) {
         int label = checkInteger(value1);
         ClassesManager classesManager = ClassesManager.getInstance();
+        long result;
+        synchronized (classesManager) {
+            result = classesManager.getCollection().keySet().stream()
+                    //Делаем список из полей Label
+                    .map(e -> classesManager.getCollection().get(e).getLabel().getBands())
+                    .filter(e -> e < label)
+                    .count();
 
-        long result = classesManager.getMap().keySet().stream()
-                //Делаем список из полей Label
-                .map(e -> classesManager.getMap().get(e).getLabel().getBands())
-                .filter(e -> e < label)
-                .count();
-
-
+        }
 
         StringBuilder stringBuilder = new StringBuilder().append("The number of elements less than "
                 + Colors.GREEN + label + Colors.RESET + " is " + Colors.GREEN + result + Colors.RESET);
@@ -34,12 +35,12 @@ public class FilterLessThanLabel extends Command {
     }
 
     @Override
-    public Response execute(String value1, MusicBand value2,int client_id) {
+    public Response execute(String value1, MusicBand value2, int client_id) {
         throw new IllegalArgumentException("Not supported");
     }
 
     @Override
-    public Response execute(MusicBand value1,int client_id) {
+    public Response execute(MusicBand value1, int client_id) {
         throw new IllegalArgumentException("Not supported");
     }
 

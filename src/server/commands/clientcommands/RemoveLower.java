@@ -4,9 +4,9 @@ import server.commands.Command;
 import server.data.ClassesManager;
 import common.dataclasses.MusicBand;
 import common.Response;
-import server.postgres.CommandsDAO;
 
 import java.util.List;
+import java.util.Map;
 
 public class RemoveLower extends Command {
     @Override
@@ -15,31 +15,33 @@ public class RemoveLower extends Command {
     }
 
     @Override
-    public Response execute(String value1,int client_id) {
+    public Response execute(String value1, int client_id) {
         throw new IllegalArgumentException("Not supported");
     }
 
     @Override
-    public Response execute(String value1, MusicBand value2,int client_id) {
+    public Response execute(String value1, MusicBand value2, int client_id) {
         throw new IllegalArgumentException("Not supported");
     }
 
     @Override
     public Response execute(MusicBand value1, int client_id) {
 
-        List<String> collect = ClassesManager.getInstance().getMap().keySet()
-                .stream()
-                .filter(e -> value1.compareTo(ClassesManager.getInstance().getMap().get(e)) > 0)
-                .map(e -> String.valueOf(e))
-                .toList();
+        Map<Integer, MusicBand> collection = ClassesManager.getInstance().getCollection();
+        List<String> collect;
+
+        synchronized (collection) {
+            collect = collection.keySet()
+                    .stream()
+                    .filter(e -> value1.compareTo(ClassesManager.getInstance().getCollection().get(e)) > 0)
+                    .map(String::valueOf)
+                    .toList();
+        }
 
 
         StringBuilder stringBuilder = new StringBuilder();
-
         for (String key : collect) {
-
             stringBuilder.append(new RemoveKey().execute(key, client_id).getData()).append("\n");
-
         }
 
 

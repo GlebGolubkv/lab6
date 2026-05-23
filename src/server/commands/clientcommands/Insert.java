@@ -7,8 +7,6 @@ import common.dataclasses.MusicBand;
 import common.Response;
 import server.postgres.CommandsDAO;
 
-import java.sql.SQLException;
-
 public class Insert extends Command {
     @Override
     public Response execute(int client_id) {
@@ -57,7 +55,7 @@ public class Insert extends Command {
         }
 
         //если уже есть в массиве
-        if (!ClassesManager.getInstance().getMap().containsKey(newKey)) {
+        if (!ClassesManager.getInstance().getCollection().containsKey(newKey)) {
             return newKey;
         } else {
             int newGenerateKey = new KeyGenerator().generateNewKey();

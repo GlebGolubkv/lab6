@@ -14,27 +14,26 @@ public class ReplaceIfGreater extends Command {
     }
 
     @Override
-    public Response execute(String value1,int client_id) {
+    public Response execute(String value1, int client_id) {
         throw new IllegalArgumentException("Not supported");
     }
 
     @Override
-    public Response execute(String value1, MusicBand value2,int client_id) {
+    public Response execute(String value1, MusicBand value2, int client_id) {
 
 
         int key = checkInteger(value1);
 
         ClassesManager cm = ClassesManager.getInstance();
-        MusicBand oldMusicBand = cm.getMap().get(key);
+        MusicBand oldMusicBand = cm.getCollection().get(key);
         if (oldMusicBand == null) {
             throw new IllegalArgumentException("The replacement object was not found");
         }
 
         if (value2.compareTo(oldMusicBand) > 0) {
-
             if (CommandsDAO.updateMusicBandByKey(key, value2, client_id)) {
 
-                cm.getMap().put(key, value2);
+                cm.getCollection().put(key, value2);
                 StringBuilder stringBuilder = new StringBuilder().append("Key " + Colors.GREEN + key + Colors.RESET + " replaced");
                 return new Response(true, "ReplaceIfLower successfully completed.", stringBuilder);
             } else {
@@ -47,7 +46,7 @@ public class ReplaceIfGreater extends Command {
     }
 
     @Override
-    public Response execute(MusicBand value1,int client_id) {
+    public Response execute(MusicBand value1, int client_id) {
         throw new IllegalArgumentException("Not supported");
     }
 
