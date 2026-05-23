@@ -7,6 +7,7 @@ import server.commands.*;
 import server.commands.clientcommands.*;
 import server.commands.internalcommands.InsertUser;
 import server.commands.internalcommands.LogInUser;
+import server.commands.lab8.GetCollection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,6 +72,7 @@ public class DataCommands {
         commands.put(CommandType.PRINT_FIELD_DESCENDING_LABEL, new PrintFieldDescendingLabel());
         commands.put(CommandType.INSERT_USER, new InsertUser());
         commands.put(CommandType.LOG_IN_USER, new LogInUser());
+        commands.put(CommandType.GET_COLLECTION, new GetCollection());
     }
 
     /**

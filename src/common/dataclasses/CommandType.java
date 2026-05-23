@@ -92,6 +92,12 @@ public enum CommandType {
     LOG_IN_USER("log_in_user",
             "войти в аккаунт",
             true,
+            false, true),
+    /** Lab 8 GUI: full collection with owner ids (not shown in help). */
+    GET_COLLECTION(
+            "get_collection",
+            "получить коллекцию для GUI",
+            false,
             false, true);
 
     private final String commandName;

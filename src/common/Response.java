@@ -1,6 +1,9 @@
 package common;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import common.lab8.MusicBandEntry;
+
+import java.util.List;
 
 public class Response {
 
@@ -14,6 +17,9 @@ public class Response {
     }
 
     private int serverData;
+
+    /** Lab 8: structured collection payload for GUI clients. */
+    private List<MusicBandEntry> entries;
 
     public Response() {
     }
@@ -46,6 +52,12 @@ public class Response {
         this.data = data;
     }
 
+    public Response(boolean success, String message, List<MusicBandEntry> entries) {
+        this.success = success;
+        this.message = message;
+        this.entries = entries;
+    }
+
     public String toJson() throws JsonProcessingException {
         return JsonDataMapper.getInstance().getMapper().writeValueAsString(this);
     }
@@ -68,6 +80,14 @@ public class Response {
     }
 
     public boolean isInternalOnly() {return internalOnly;}
+
+    public List<MusicBandEntry> getEntries() {
+        return entries;
+    }
+
+    public void setEntries(List<MusicBandEntry> entries) {
+        this.entries = entries;
+    }
 
     @Override
     public String toString() {

@@ -81,7 +81,7 @@ public class ServerNetworkManager {
             processPool.submit(() -> handleProcess(request, sender));
 
         } catch (Exception e) {
-            sendPool.submit(() -> sendResponse(new Response(false, "Error while processing request: " + e.getMessage(), null), sender));
+            sendPool.submit(() -> sendResponse(new Response(false, "Error while processing request: " + e.getMessage()), sender));
         }
     }
 

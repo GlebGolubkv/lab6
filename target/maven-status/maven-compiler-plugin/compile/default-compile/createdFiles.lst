@@ -1,0 +1,14 @@
+client/lab8/Lab8MainView.class
+client/lab8/Lab8Formats.class
+client/lab8/Lab8Localization.class
+client/lab8/Lab8MainView$1.class
+client/lab8/Lab8Session.class
+client/lab8/Lab8CanvasPanel$DrawnShape.class
+client/lab8/Lab8CanvasPanel.class
+server/commands/lab8/GetCollection.class
+common/lab8/MusicBandEntry.class
+client/lab8/Lab8BandDialog.class
+client/lab8/Lab8AuthView.class
+client/lab8/Lab8ClientService.class
+client/lab8/Lab8Application.class
+client/lab8/Lab8CollectionUtils.class
