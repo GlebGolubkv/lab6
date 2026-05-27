@@ -10,6 +10,9 @@
         <dependencySet>
             <unpack>true</unpack>
             <scope>runtime</scope>
+            <excludes>
+                <exclude>org.openjfx:*</exclude>
+            </excludes>
         </dependencySet>
     </dependencySets>
     <fileSets>

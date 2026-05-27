@@ -4,15 +4,23 @@ import server.commands.Command;
 import server.data.ClassesManager;
 import common.dataclasses.MusicBand;
 import common.Response;
-import common.dataclasses.Colors;
 
+/**
+ * Команда подсчёта элементов, у которых поле label меньше заданного значения.
+ */
 public class FilterLessThanLabel extends Command {
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response execute(int client_id) {
         throw new IllegalArgumentException("Not supported");
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response execute(String value1, int client_id) {
         int label = checkInteger(value1);
@@ -20,25 +28,34 @@ public class FilterLessThanLabel extends Command {
         long result;
         synchronized (classesManager) {
             result = classesManager.getCollection().keySet().stream()
-                    //Делаем список из полей Label
+                    
                     .map(e -> classesManager.getCollection().get(e).getLabel().getBands())
                     .filter(e -> e < label)
                     .count();
 
         }
 
-        StringBuilder stringBuilder = new StringBuilder().append("The number of elements less than "
-                + Colors.GREEN + label + Colors.RESET + " is " + Colors.GREEN + result + Colors.RESET);
+        StringBuilder stringBuilder = new StringBuilder()
+                .append("The number of elements less than ")
+                .append(label)
+                .append(" is ")
+                .append(result);
 
         return new Response(true, "FilterLessThanLabel successfully completed.", stringBuilder);
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response execute(String value1, MusicBand value2, int client_id) {
         throw new IllegalArgumentException("Not supported");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response execute(MusicBand value1, int client_id) {
         throw new IllegalArgumentException("Not supported");
@@ -54,6 +71,9 @@ public class FilterLessThanLabel extends Command {
         return newKey;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String commandInfo() {
         return "вывести количество элементов, значение поля label которых меньше заданного";

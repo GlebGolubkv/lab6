@@ -1,20 +1,16 @@
 package client;
 
-
-import common.BandsInputTerminal;
 import common.JsonDataMapper;
 
+/**
+ * Инициализатор общих компонентов клиента перед началом работы.
+ */
 public class ClientInitializer {
 
-
-    public ClientInitializer() {}
-
-
+    /**
+     * Выполняет начальную настройку сериализации JSON.
+     */
     public static void initialize() {
-
         JsonDataMapper.initialize();
-        BandsInputTerminal.initialize();
     }
-
-    
 }

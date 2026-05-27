@@ -3,6 +3,10 @@ package common.dataclasses;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Типы команд клиента и сервера с метаданными: имя, описание и требования к аргументам.
+ * Содержит проверку соответствия переданных аргумента и {@link MusicBand} ожиданиям команды.
+ */
 public enum CommandType {
 
     BEGIN_TRANSACTION(
@@ -93,7 +97,6 @@ public enum CommandType {
             "войти в аккаунт",
             true,
             false, true),
-    /** Lab 8 GUI: full collection with owner ids (not shown in help). */
     GET_COLLECTION(
             "get_collection",
             "получить коллекцию для GUI",
@@ -122,35 +125,69 @@ public enum CommandType {
         this.isInternalOnly = isInternalOnly;
     }
 
+    /**
+     * @return строковое имя команды для протокола
+     */
     public String getCommandName() {
         return commandName;
     }
 
+    /**
+     * @return краткое описание команды
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * @return {@code true}, если команде нужен строковый аргумент
+     */
     public boolean requiresArgument() {
         return requiresArgument;
     }
 
+    /**
+     * @return {@code true}, если команде нужен объект {@link MusicBand}
+     */
     public boolean requiresMusicBand() {
         return requiresMusicBand;
     }
 
+    /**
+     * @return {@code true}, если команда только для внутреннего использования (авторизация, GUI)
+     */
     public boolean isInternalOnly() {
         return isInternalOnly;
     }
 
+    /**
+     * Находит тип команды по строковому имени (без учёта регистра).
+     *
+     * @param name имя команды
+     * @return соответствующий {@code CommandType} или {@code null}
+     */
     public static CommandType fromName(String name) {
         if (name == null) return null;
         return BY_NAME.get(name.toLowerCase().trim());
     }
 
+    /**
+     * Проверяет, зарегистрировано ли имя команды.
+     *
+     * @param name имя команды
+     * @return {@code true}, если команда известна
+     */
     public static boolean contains(String name) {
         return name != null && BY_NAME.containsKey(name.toLowerCase().trim());
     }
 
+    /**
+     * Проверяет, что аргумент и объект группы соответствуют требованиям этой команды.
+     *
+     * @param argument  строковый аргумент команды
+     * @param musicBand данные группы
+     * @return {@code true}, если набор параметров допустим
+     */
     public boolean validateInput(String argument, MusicBand musicBand) {
         boolean hasMusicBand = (musicBand != null);
 
@@ -169,6 +206,13 @@ public enum CommandType {
         return true;
     }
 
+    /**
+     * Возвращает текст ошибки валидации или {@code null}, если параметры корректны.
+     *
+     * @param argument  строковый аргумент команды
+     * @param musicBand данные группы
+     * @return сообщение об ошибке либо {@code null}
+     */
     public String getValidationError(String argument, MusicBand musicBand) {
         boolean hasMusicBand = (musicBand != null);
 
@@ -186,6 +230,5 @@ public enum CommandType {
         }
         return null;
     }
-
 
 }

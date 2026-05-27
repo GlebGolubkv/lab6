@@ -5,6 +5,7 @@ import common.dataclasses.CommandType;
 import common.Response;
 import server.commands.*;
 import server.commands.clientcommands.*;
+import server.commands.internalcommands.GetCollection;
 import server.commands.internalcommands.InsertUser;
 import server.commands.internalcommands.LogInUser;
 
@@ -12,23 +13,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Manages the registration and execution of commands.
- * Implements the Singleton pattern to provide a single point of access to all available commands.
- * Commands are stored in a HashMap with their names as keys.
+ * Реестр серверных команд: инициализация, поиск и выполнение по типу {@link CommandType}.
  */
 public class DataCommands {
 
-    /**
-     * A map that stores all available commands, keyed by their names.
-     */
     private static final HashMap<CommandType, Command> commands = new HashMap<>();
     private static DataCommands instance;
 
     /**
-     * Returns the singleton instance of DataCommands.
+     * Возвращает единственный экземпляр реестра команд.
      *
-     * @return the singleton instance
-     * @throws IllegalStateException if the instance has not been initialized
+     * @return инициализированный {@link DataCommands}
+     * @throws IllegalStateException если реестр ещё не инициализирован
      */
     public static DataCommands getInstance() {
         if (instance == null) {
@@ -38,10 +34,9 @@ public class DataCommands {
     }
 
     /**
-     * Initializes the singleton instance of DataCommands.
-     * This method must be called once before using the instance.
+     * Инициализирует реестр команд (выполняется один раз при старте сервера).
      *
-     * @throws IllegalStateException if the instance has already been initialized
+     * @throws IllegalStateException если реестр уже инициализирован
      */
     public static void initialize() {
         if (instance == null) {
@@ -51,9 +46,6 @@ public class DataCommands {
         }
     }
 
-    /**
-     * Private constructor that populates the command map with all predefined commands.
-     */
     private DataCommands() {
         commands.put(CommandType.HELP, new Help());
         commands.put(CommandType.INFO, new Info());
@@ -75,40 +67,54 @@ public class DataCommands {
     }
 
     /**
-     * Returns a list of all registered command names.
+     * Возвращает список зарегистрированных типов команд.
      *
-     * @return an ArrayList containing the names of all commands
+     * @return копия списка типов команд
      */
     public ArrayList<CommandType> getCommands() {
         return new ArrayList<>(commands.keySet());
     }
 
     /**
-     * Registers a new command with the specified name.
+     * Добавляет или заменяет команду в реестре.
      *
-     * @param commandName the name under which the command will be registered
-     * @param command     the command implementation
+     * @param commandName тип команды
+     * @param command     экземпляр команды
      */
     public void addCommand(CommandType commandName, Command command) {
         commands.put(commandName, command);
     }
 
     /**
-     * Retrieves a command by its name.
+     * Возвращает экземпляр команды по типу.
      *
-     * @param commandName the name of the command
-     * @return the Command object, or null if no command with that name exists
+     * @param commandName тип команды
+     * @return команда или {@code null}, если не найдена
      */
     public Command getCommand(CommandType commandName) {
         return commands.get(commandName);
     }
+
+    /**
+     * Возвращает строковое имя команды по типу.
+     *
+     * @param commandType тип команды
+     * @return имя команды
+     */
     public String getCommandName(CommandType commandType) {
         return  commandType.getCommandName();
     }
 
-
+    /**
+     * Создаёт и выполняет команду с учётом требуемых аргументов.
+     *
+     * @param commandType тип команды
+     * @param argument    строковый аргумент (может быть {@code null})
+     * @param musicBand   объект музыкальной группы (может быть {@code null})
+     * @param clientId    идентификатор клиента
+     * @return ответ сервера
+     */
     public Response createCommand(CommandType commandType, String argument, MusicBand musicBand, int clientId) {
-
 
         if (commandType.requiresArgument() && commandType.requiresMusicBand()){
 

@@ -1,53 +1,43 @@
 package common.dataclasses;
 
-
+/**
+ * Метка (лейбл) музыкальной группы — число связанных групп ({@code bands}).
+ */
 public class Label {
 
-    /**
-     * The number of bands associated with the label. Can be null.
-     */
-    private Integer bands; //Поле может быть null
+    private Integer bands;
 
     /**
-     * Default constructor for Label.
+     * Конструктор по умолчанию для десериализации JSON.
      */
     public Label() {
     }
 
     /**
-     * Constructs a Label with the specified number of bands.
+     * Создаёт метку с заданным числом связанных групп.
      *
-     * @param bands the number of bands, may be null
+     * @param bands количество групп на метке
      */
     public Label(Integer bands) {
         this.bands = bands;
     }
 
     /**
-     * Returns the number of bands.
-     *
-     * @return the bands value, may be null
+     * @return число групп на метке
      */
     public Integer getBands() {
         return bands;
     }
 
     /**
-     * Sets the number of bands.
-     *
-     * @param bands the new bands value, may be null
+     * @param bands число групп на метке
      */
     public void setBands(Integer bands) {
         this.bands = bands;
     }
 
-    /**
-     * Returns a string representation of the Label object with color formatting.
-     *
-     * @return a colored string containing the bands value
-     */
     @Override
     public String toString() {
-        return Colors.WHITE + "Labels= " + Colors.RESET + bands.toString();
+        return "Labels=" + bands;
     }
 }

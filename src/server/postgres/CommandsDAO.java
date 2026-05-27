@@ -12,10 +12,19 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * Доступ к данным PostgreSQL: музыкальные группы, пользователи и связанные операции.
+ */
 public class CommandsDAO {
 
-
+    /**
+     * Вставляет музыкальную группу в БД и присваивает ей сгенерированный {@code id}.
+     *
+     * @param bandKey   ключ элемента в коллекции
+     * @param musicBand объект группы
+     * @param ownerId   идентификатор владельца
+     * @return тот же объект с заполненным {@code id}
+     */
     public static MusicBand insertMusicBand(int bandKey, MusicBand musicBand, int ownerId) {
 
         String sql = """
@@ -25,7 +34,6 @@ public class CommandsDAO {
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 RETURNING id
                 """;
-
 
         try (Connection connection = ConnectionInitializer.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -55,12 +63,16 @@ public class CommandsDAO {
                 }
             }
 
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
+    /**
+     * Загружает все музыкальные группы из таблицы {@code musicbands}.
+     *
+     * @return карта «ключ коллекции → группа»
+     */
     public static Map<Integer, MusicBand> readFromPostgres() {
         Map<Integer, MusicBand> map = new HashMap<>();
         String sql = "SELECT * FROM musicbands";
@@ -90,7 +102,14 @@ public class CommandsDAO {
         return map;
     }
 
-
+    /**
+     * Обновляет группу в БД по внутреннему {@code id}, если она принадлежит владельцу.
+     *
+     * @param id        идентификатор записи в БД
+     * @param musicBand новые данные группы
+     * @param owner_id  идентификатор владельца
+     * @return {@code true}, если обновлена хотя бы одна строка
+     */
     public static boolean updateMusicBandById(int id, MusicBand musicBand, int owner_id) {
 
         if (findOwnerIdFromBandID(id) != owner_id) {
@@ -138,7 +157,13 @@ public class CommandsDAO {
 
     }
 
-
+    /**
+     * Удаляет группу из БД по ключу коллекции и идентификатору владельца.
+     *
+     * @param key      ключ элемента
+     * @param owner_id идентификатор владельца
+     * @return {@code true}, если удалена хотя бы одна строка
+     */
     public static boolean removeMusicBand(int key, int owner_id) {
         String sql = """
                         DELETE FROM musicbands WHERE band_key = ? AND owner_id = ?;
@@ -159,6 +184,12 @@ public class CommandsDAO {
         }
     }
 
+    /**
+     * Удаляет все группы владельца, вызывая команду {@code remove_key} для каждого ключа.
+     *
+     * @param owner_id идентификатор владельца
+     * @return журнал результатов удаления
+     */
     public static StringBuilder clearMusicBands(int owner_id) {
 
         StringBuilder string = new StringBuilder().append("Cleared music bands: \n");
@@ -174,7 +205,6 @@ public class CommandsDAO {
                 Response response = DataCommands.getInstance().createCommand(CommandType.REMOVE_KEY, resultSet.getString("band_key"), null, owner_id);
                 string.append(response.getMessage()).append('\n');
 
-
             }
             return string;
         } catch (SQLException e) {
@@ -182,7 +212,14 @@ public class CommandsDAO {
         }
     }
 
-
+    /**
+     * Обновляет группу в БД по ключу коллекции, если она принадлежит владельцу.
+     *
+     * @param key       ключ элемента
+     * @param musicBand новые данные группы
+     * @param owner_id  идентификатор владельца
+     * @return {@code true}, если обновлена хотя бы одна строка
+     */
     public static boolean updateMusicBandByKey(int key, MusicBand musicBand, int owner_id) {
 
         if (findOwnerIdFromBandKey(key) != owner_id) {
@@ -231,6 +268,51 @@ public class CommandsDAO {
 
     }
 
+    /**
+     * Проверяет наличие группы с заданным ключом в БД.
+     *
+     * @param bandKey ключ коллекции
+     * @return {@code true}, если запись существует
+     */
+    public static boolean bandKeyExists(int bandKey) {
+        String sql = "SELECT 1 FROM musicbands WHERE band_key = ? LIMIT 1";
+        try (Connection connection = ConnectionInitializer.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, bandKey);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return resultSet.next();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Загружает соответствие «ключ коллекции → владелец» одним запросом (для {@code get_collection}).
+     *
+     * @return карта {@code band_key} → {@code owner_id}
+     */
+    public static Map<Integer, Integer> readBandKeyOwnerMap() {
+        Map<Integer, Integer> owners = new HashMap<>();
+        String sql = "SELECT band_key, owner_id FROM musicbands";
+        try (Connection connection = ConnectionInitializer.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                owners.put(resultSet.getInt("band_key"), resultSet.getInt("owner_id"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return owners;
+    }
+
+    /**
+     * Возвращает идентификатор владельца по ключу элемента коллекции.
+     *
+     * @param key ключ коллекции
+     * @return {@code owner_id} из БД
+     */
     public static int findOwnerIdFromBandKey(int key) {
         String sql = """
                                  SELECT owner_id FROM musicbands WHERE band_key = ?;
@@ -245,12 +327,17 @@ public class CommandsDAO {
                 return resultSet.getInt("owner_id");
             } else throw new SQLException("Error finding owner_id from band.");
 
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
+    /**
+     * Возвращает идентификатор владельца по внутреннему {@code id} записи в БД.
+     *
+     * @param id идентификатор музыкальной группы
+     * @return {@code owner_id} из БД
+     */
     public static int findOwnerIdFromBandID(int id) {
         String sql = """
                                  SELECT owner_id FROM musicbands WHERE id = ?;
@@ -270,6 +357,12 @@ public class CommandsDAO {
         }
     }
 
+    /**
+     * Проверяет, зарегистрировано ли имя пользователя в таблице {@code users}.
+     *
+     * @param name имя пользователя
+     * @return ответ с признаком существования ({@link Response#isSuccess()})
+     */
     public static Response isUserExists(String name) {
         try (Connection connection = ConnectionInitializer.getInstance().getConnection()) {
             String sql = "SELECT EXISTS (SELECT 1 FROM users WHERE name = ?);";
@@ -290,8 +383,14 @@ public class CommandsDAO {
         throw new IllegalArgumentException("Error checking for availability");
     }
 
+    /**
+     * Регистрирует нового пользователя с паролем (хеш MD5 в БД).
+     *
+     * @param name     имя пользователя
+     * @param password пароль в открытом виде
+     * @return ответ с {@code userId} при успехе
+     */
     public static Response insertUser(String name, String password) {
-
 
         String sql = "INSERT INTO users (name, password) VALUES (?, MD5(?)) RETURNING id";
 
@@ -307,12 +406,18 @@ public class CommandsDAO {
                 return new Response(true, "User inserted successfully", true, userId);
             } else return new Response(false, "User insertion failed");
 
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
+    /**
+     * Проверяет учётные данные и возвращает идентификатор пользователя при успешном входе.
+     *
+     * @param username имя пользователя
+     * @param password пароль
+     * @return ответ с {@code userId} при успехе
+     */
     public static Response logInUser(String username, String password) {
 
         String sql = """
@@ -335,6 +440,5 @@ public class CommandsDAO {
         }
 
     }
-
 
 }

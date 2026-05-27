@@ -4,45 +4,56 @@ import common.dataclasses.MusicBand;
 import common.Response;
 
 /**
- * Abstract base class for all commands in the application.
- * Defines the contract for executing commands with different parameter sets
- * and providing command information.
+ * Абстрактный базовый класс серверной команды.
+ * Определяет перегрузки {@link #execute} для разных наборов аргументов и описание команды.
  */
 public abstract class Command {
 
+    /**
+     * Создаёт экземпляр команды.
+     */
     public Command() {}
 
     /**
-     * Executes the command without any parameters.
+     * Выполняет команду без дополнительных аргументов.
+     *
+     * @param clintId идентификатор клиента
+     * @return ответ сервера
      */
     public abstract Response execute(int clintId);
 
     /**
-     * Executes the command with a single string parameter.
+     * Выполняет команду со строковым аргументом.
      *
-     * @param value1 the string argument for the command
+     * @param value1  строковый аргумент команды
+     * @param clintId идентификатор клиента
+     * @return ответ сервера
      */
     public abstract Response execute(String value1, int clintId);
 
     /**
-     * Executes the command with a string parameter and a MusicBand object.
+     * Выполняет команду со строковым аргументом и объектом {@link MusicBand}.
      *
-     * @param value1 the string argument for the command
-     * @param value2 the MusicBand object to be processed
+     * @param value1  строковый аргумент команды
+     * @param value2  музыкальная группа
+     * @param clintId идентификатор клиента
+     * @return ответ сервера
      */
     public abstract Response execute(String value1, MusicBand value2, int clintId);
 
     /**
-     * Executes the command with a MusicBand object.
+     * Выполняет команду с объектом {@link MusicBand}.
      *
-     * @param value1 the MusicBand object to be processed
+     * @param value1  музыкальная группа
+     * @param clintId идентификатор клиента
+     * @return ответ сервера
      */
     public abstract Response execute(MusicBand value1, int clintId);
 
     /**
-     * Provides information about the command.
+     * Возвращает краткое описание назначения команды.
      *
-     * @return a string describing the command's purpose and usage
+     * @return текст описания команды
      */
     public abstract String commandInfo();
 }

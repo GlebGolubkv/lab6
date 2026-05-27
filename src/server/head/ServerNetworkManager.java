@@ -14,10 +14,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ForkJoinPool;
 
+/**
+ * UDP-сервер: приём запросов клиентов, выполнение команд и отправка ответов в пулах потоков.
+ */
 public class ServerNetworkManager {
 
-
-    private static final int PORT = 8887;
+    private static final int PORT = 8889;
     private static final String HOSTNAME = "localhost";
     private static final int bufferSize = 65535;
     private static final SocketAddress socketAddress = new InetSocketAddress(HOSTNAME, PORT);
@@ -29,15 +31,24 @@ public class ServerNetworkManager {
     private final ForkJoinPool processPool = new ForkJoinPool(8);
     private final ForkJoinPool sendPool = new ForkJoinPool(4);
 
-
+    /**
+     * Создаёт сетевой менеджер сервера.
+     */
     public ServerNetworkManager() {
     }
 
+    /**
+     * Запрашивает корректное завершение цикла приёма пакетов.
+     */
     public void makeShutdown() {
         shouldShutdown = true;
     }
 
-
+    /**
+     * Запускает основной цикл приёма UDP-пакетов до вызова {@link #makeShutdown()}.
+     *
+     * @throws RuntimeException при ошибке сокета или обработки
+     */
     public void start() throws RuntimeException {
 
         try {
@@ -52,7 +63,7 @@ public class ServerNetworkManager {
                 try {
                     byte[] buffer = new byte[bufferSize];
 
-                    // создание пакета и прислушивание порта
+                    
                     DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                     socket.receive(packet);
 
@@ -69,7 +80,6 @@ public class ServerNetworkManager {
 
         }
     }
-
 
     private void handleReceive(DatagramPacket packet) {
 
@@ -98,16 +108,16 @@ public class ServerNetworkManager {
             byte[] responseBytes = responseJson.getBytes("UTF-8");
 
             if (responseBytes.length > bufferSize) {
-                responseJson = new Response(false, "The answer is too big: " + responseJson.substring(0, bufferSize - 100) + "\"...[TRUNCATED]\"}").toJson();
-                responseBytes = responseJson.getBytes("UTF-8");
+                Response tooLarge = new Response(false,
+                        "Ответ не помещается в UDP-пакет: " + responseBytes.length
+                                + " байт (лимит " + bufferSize + " байт).");
+                responseBytes = tooLarge.toJson().getBytes("UTF-8");
             }
 
             DatagramPacket packet = new DatagramPacket(responseBytes, responseBytes.length, sender.getAddress(), sender.getPort());
 
-
             socket.send(packet);
             System.out.println("Sent response to: " + sender.getAddress() + ":" + sender.getPort());
-
 
         } catch (Exception e) {
             throw new RuntimeException("Error while sending response: " + e.getMessage());
@@ -143,6 +153,5 @@ public class ServerNetworkManager {
             throw new IllegalArgumentException("Invalid command type");
         }
     }
-
 
 }

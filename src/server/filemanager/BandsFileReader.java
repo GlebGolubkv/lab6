@@ -10,25 +10,20 @@ import java.io.IOException;
 import java.time.ZonedDateTime;
 
 /**
- * Provides functionality to read MusicBand objects from a file using a BufferedReader.
- * Handles reading of all MusicBand fields line by line and constructs the corresponding object.
- * Implements the Singleton pattern to ensure a single instance manages file-based band input.
+ * Чтение полей объекта {@link MusicBand} из текстового потока (скрипт или файл).
  */
 public class BandsFileReader {
 
     private static BandsFileReader instance;
 
-    /**
-     * Private constructor for singleton pattern.
-     */
     private BandsFileReader() {
     }
 
     /**
-     * Returns the singleton instance of BandsFileReader.
+     * Возвращает единственный экземпляр читателя групп.
      *
-     * @return the singleton instance
-     * @throws IllegalStateException if the instance has not been initialized
+     * @return инициализированный {@link BandsFileReader}
+     * @throws IllegalStateException если читатель не инициализирован
      */
     public static BandsFileReader getInstance() {
         if (instance == null) {
@@ -38,10 +33,9 @@ public class BandsFileReader {
     }
 
     /**
-     * Initializes the singleton instance of BandsFileReader.
-     * Must be called once before using the instance.
+     * Инициализирует читатель групп (выполняется один раз).
      *
-     * @throws IllegalStateException if the instance has already been initialized
+     * @throws IllegalStateException при повторной инициализации
      */
     public static void initialize() {
         if (instance == null) {
@@ -52,108 +46,105 @@ public class BandsFileReader {
     }
 
     /**
-     * Reads a MusicBand object from the provided BufferedReader, generating a new ID automatically.
-     * Reads all required fields in a predefined order: name, x-coordinate, y-coordinate,
-     * number of participants, albums count, music genre, and label bands count.
+     * Считывает музыкальную группу из потока; идентификатор в БД назначается при вставке.
      *
-     * @param bufferedReader the BufferedReader to read data from
-     * @return a fully constructed MusicBand object
-     * @throws IllegalArgumentException if any error occurs during reading or validation
+     * @param bufferedReader поток ввода полей группы
+     * @return прочитанная {@link MusicBand}
      */
     public MusicBand inputBand(BufferedReader bufferedReader) {
 
         try {
 
-            Integer Id = 0; // ID
+            Integer Id = 0; 
 
-            String Name = readName(bufferedReader);  //NAME
+            String Name = readName(bufferedReader);  
 
-            Coordinates coordinates = new Coordinates(readXCoordinates(bufferedReader), readYCoordinates(bufferedReader)); // COORDINATES
+            Coordinates coordinates = new Coordinates(readXCoordinates(bufferedReader), readYCoordinates(bufferedReader)); 
 
-            ZonedDateTime time = ZonedDateTime.now(); // TIME
+            ZonedDateTime time = ZonedDateTime.now(); 
 
-            long numberOfParticipants = readNumberOfParticipants(bufferedReader); // participants
+            long numberOfParticipants = readNumberOfParticipants(bufferedReader); 
 
-            long albumsCount = readAlbumsCount(bufferedReader); // albums
+            long albumsCount = readAlbumsCount(bufferedReader); 
 
-            MusicGenre musicGenre = readMusicGenre(bufferedReader); // genre
+            MusicGenre musicGenre = readMusicGenre(bufferedReader); 
 
-            Label label = readLabel(bufferedReader); // label
+            Label label = readLabel(bufferedReader); 
 
             MusicBand musicBand = new MusicBand(Id, Name, coordinates, time, numberOfParticipants, albumsCount, musicGenre, label);
 
             return musicBand;
         } catch (Exception e) {
-
-            throw new IllegalArgumentException("Error reading from file.");
-
+            throw bandReadException(e);
         }
     }
 
     /**
-     * Reads a MusicBand object from the provided BufferedReader, using the specified ID.
-     * Reads all required fields in a predefined order (same as {@link #inputBand(BufferedReader)}).
+     * Считывает музыкальную группу из потока с заданным идентификатором (для update).
      *
-     * @param Id              the ID to assign to the MusicBand
-     * @param bufferedReader the BufferedReader to read data from
-     * @return a fully constructed MusicBand object with the given ID
-     * @throws IllegalArgumentException if any error occurs during reading or validation
+     * @param Id             идентификатор объекта
+     * @param bufferedReader поток ввода полей группы
+     * @return прочитанная {@link MusicBand}
      */
     public MusicBand inputBand(Integer Id, BufferedReader bufferedReader) {
 
         try {
 
-            String Name = readName(bufferedReader);  //NAME
+            String Name = readName(bufferedReader);  
 
-            Coordinates coordinates = new Coordinates(readXCoordinates(bufferedReader), readYCoordinates(bufferedReader)); // COORDINATES
+            Coordinates coordinates = new Coordinates(readXCoordinates(bufferedReader), readYCoordinates(bufferedReader)); 
 
-            ZonedDateTime time = ZonedDateTime.now(); // TIME
+            ZonedDateTime time = ZonedDateTime.now(); 
 
-            long numberOfParticipants = readNumberOfParticipants(bufferedReader); // participants
+            long numberOfParticipants = readNumberOfParticipants(bufferedReader); 
 
-            long albumsCount = readAlbumsCount(bufferedReader); // albums
+            long albumsCount = readAlbumsCount(bufferedReader); 
 
-            MusicGenre musicGenre = readMusicGenre(bufferedReader); // genre
+            MusicGenre musicGenre = readMusicGenre(bufferedReader); 
 
-            Label label = readLabel(bufferedReader); // label
+            Label label = readLabel(bufferedReader); 
 
             MusicBand musicBand = new MusicBand(Id, Name, coordinates, time, numberOfParticipants, albumsCount, musicGenre, label);
 
-
             return musicBand;
         } catch (Exception e) {
-
-            throw new IllegalArgumentException("Error reading from file.");
-
+            throw bandReadException(e);
         }
     }
 
-    /**
-     * Reads and validates the band name from the BufferedReader.
-     *
-     * @param bufferedReader the BufferedReader to read from
-     * @return the trimmed non-empty name
-     * @throws IOException           if an I/O error occurs
-     * @throws IllegalStateException if the name is empty
-     */
+    private static IllegalArgumentException bandReadException(Exception e) {
+        String detail = e.getMessage();
+        if (detail == null || detail.isBlank()) {
+            detail = e.getClass().getSimpleName();
+        }
+        return new IllegalArgumentException("Error reading MusicBand from script: " + detail, e);
+    }
+
+    private String readDataLine(BufferedReader bufferedReader) throws IOException {
+        String line;
+        do {
+            line = bufferedReader.readLine();
+            if (line == null) {
+                throw new IllegalStateException("Unexpected end of script file while reading MusicBand fields");
+            }
+            line = line.trim();
+            if (!line.isEmpty() && line.charAt(0) == '\ufeff') {
+                line = line.substring(1).trim();
+            }
+        } while (line.isEmpty() || line.startsWith("#"));
+        return line;
+    }
+
     private String readName(BufferedReader bufferedReader) throws IOException {
-        String name = bufferedReader.readLine().trim();
+        String name = readDataLine(bufferedReader);
         if (name.isEmpty()) {
             throw new IllegalStateException("Error: name cannot be empty.");
         } else return name;
     }
 
-    /**
-     * Reads and validates the x-coordinate from the BufferedReader.
-     *
-     * @param bufferedReader the BufferedReader to read from
-     * @return the x-coordinate as an integer (must be ≤ 254)
-     * @throws IOException           if an I/O error occurs
-     * @throws IllegalStateException if the input is empty, not an integer, or exceeds 254
-     */
     private Integer readXCoordinates(BufferedReader bufferedReader) throws IOException {
 
-        String x = bufferedReader.readLine().trim();
+        String x = readDataLine(bufferedReader);
 
         if (x.isEmpty()) {
 
@@ -173,17 +164,9 @@ public class BandsFileReader {
 
     }
 
-    /**
-     * Reads and validates the y-coordinate from the BufferedReader.
-     *
-     * @param bufferedReader the BufferedReader to read from
-     * @return the y-coordinate as a double (must be ≤ 93)
-     * @throws IOException                if an I/O error occurs
-     * @throws IllegalArgumentException if the input is empty, not a number, or exceeds 93
-     */
     private Double readYCoordinates(BufferedReader bufferedReader) throws IOException {
 
-        String y = bufferedReader.readLine().trim();
+        String y = readDataLine(bufferedReader);
 
         if (y.isEmpty()) {
 
@@ -205,17 +188,9 @@ public class BandsFileReader {
 
     }
 
-    /**
-     * Reads and validates the number of participants from the BufferedReader.
-     *
-     * @param bufferedReader the BufferedReader to read from
-     * @return the number of participants (must be > 0)
-     * @throws IOException                if an I/O error occurs
-     * @throws IllegalArgumentException if the input is empty, not a valid long, or ≤ 0
-     */
     private long readNumberOfParticipants(BufferedReader bufferedReader) throws IOException {
 
-        String n = bufferedReader.readLine().trim();
+        String n = readDataLine(bufferedReader);
 
         if (n.isEmpty()) {
 
@@ -233,17 +208,9 @@ public class BandsFileReader {
         }
     }
 
-    /**
-     * Reads and validates the albums count from the BufferedReader.
-     *
-     * @param bufferedReader the BufferedReader to read from
-     * @return the albums count (must be > 0)
-     * @throws IOException                if an I/O error occurs
-     * @throws IllegalArgumentException if the input is empty, not a valid long, or ≤ 0
-     */
     private long readAlbumsCount(BufferedReader bufferedReader) throws IOException {
 
-        String n = bufferedReader.readLine().trim();
+        String n = readDataLine(bufferedReader);
 
         if (n.isEmpty()) {
 
@@ -262,17 +229,9 @@ public class BandsFileReader {
 
     }
 
-    /**
-     * Reads and validates the music genre from the BufferedReader.
-     *
-     * @param bufferedReader the BufferedReader to read from
-     * @return the corresponding MusicGenre enum value, or null if the input is empty
-     * @throws IOException                if an I/O error occurs
-     * @throws IllegalArgumentException if the input is not empty and does not match any genre
-     */
     private MusicGenre readMusicGenre(BufferedReader bufferedReader) throws IOException {
 
-        String genre = bufferedReader.readLine().trim();
+        String genre = readDataLine(bufferedReader);
         if (genre.isEmpty()) {
             return null;
         } else {
@@ -285,17 +244,10 @@ public class BandsFileReader {
 
     }
 
-    /**
-     * Reads and validates the label bands count from the BufferedReader and constructs a Label object.
-     *
-     * @param bufferedReader the BufferedReader to read from
-     * @return a Label object with the parsed bands count
-     * @throws IllegalArgumentException if the input is not a valid integer or an I/O error occurs
-     */
     private Label readLabel(BufferedReader bufferedReader) {
 
         try {
-            Integer x = Integer.parseInt(bufferedReader.readLine().trim());
+            Integer x = Integer.parseInt(readDataLine(bufferedReader));
             return new Label(x);
         } catch (IllegalArgumentException | IOException e) {
             throw new IllegalArgumentException("Error: Invalid label.");

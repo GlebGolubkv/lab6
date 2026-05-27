@@ -6,24 +6,12 @@ import server.filemanager.BandsFileReader;
 import server.postgres.ConnectionInitializer;
 
 /**
- * Centralizes the initialization of all application components.
- * Implements the Singleton pattern to ensure a single initialization point.
- * This class is responsible for setting up various managers and readers required
- * for the application's operation, including JSON processing, command handling,
- * terminal input, and the main collection manager.
+ * Точка инициализации серверных подсистем: БД, JSON, команды, чтение файлов, коллекция.
  */
 public class DataInitializer {
 
-    /**
-     * The singleton instance of DataInitializer.
-     */
     public static DataInitializer instance;
 
-    /**
-     * Private constructor that performs the actual initialization of all components.
-     * It calls the initialize methods of various managers and readers, passing
-     * the provided file name where necessary.
-     */
     private DataInitializer() {
 
         ConnectionInitializer.initialize();
@@ -33,14 +21,13 @@ public class DataInitializer {
         CommandsReader.initialize();
         ClassesManager.initialize();
 
-
     }
 
     /**
-     * Returns the singleton instance of DataInitializer.
+     * Возвращает единственный экземпляр инициализатора данных.
      *
-     * @return the singleton instance
-     * @throws RuntimeException if the instance has not been initialized yet
+     * @return инициализированный {@link DataInitializer}
+     * @throws RuntimeException если инициализация не выполнялась
      */
     public static DataInitializer getInstance() {
         if (instance == null) {
@@ -50,10 +37,9 @@ public class DataInitializer {
     }
 
     /**
-     * Initializes the singleton instance with the specified file name.
-     * This method must be called once before using the instance.
+     * Выполняет полную инициализацию серверных данных и подсистем.
      *
-     * @throws RuntimeException if the instance has not been initialized (due to incorrect error message logic)
+     * @throws RuntimeException при повторной инициализации
      */
     public static void initialize() {
         if (instance == null) {

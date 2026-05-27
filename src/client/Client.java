@@ -4,15 +4,16 @@ import client.gui.GuiBootstrap;
 import javafx.application.Application;
 
 /**
- * Client entry point: launches the JavaFX GUI ({@link client.gui}).
- * Console client classes ({@link ClientTerminalManager}, {@link UsersDTO}) are kept unchanged.
+ * Точка входа клиентского приложения для работы с коллекцией музыкальных групп.
  */
 public class Client {
 
+    /**
+     * Запускает графический интерфейс клиента на базе JavaFX.
+     *
+     * @param args аргументы командной строки, передаваемые в {@link Application}
+     */
     public static void main(String[] args) {
         Application.launch(GuiBootstrap.class, args);
     }
 }
-
-
-

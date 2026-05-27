@@ -1,18 +1,55 @@
 info
+insert 777701
+Script Demo Band A
+120
+45
+80
+15
+BLUES
+30
+insert 777702
+Script Demo Band B
+110
+44
+70
+13
+SOUL
+22
+insert 777703
+Script Demo Band C
+100
+40
+60
+11
+MATH_ROCK
+18
+insert 777704
+Script Demo Band D
+90
+35
+50
+9
+PUNK_ROCK
+16
+insert 777705
+Script Demo Band E
+80
+30
+40
+7
+BRIT_POP
+14
+insert 777706
+Script Demo Band F
+70
+25
+30
+5
+BLUES
+12
 show
-help
-remove_key 2
+count_by_number_of_participants 80
+filter_less_then_label 35
 print_field_descending_label
-save
-show
-begin_transaction
-remove_lower
-fil
-12
-12
-12
-12
-soul
-12
-help
+replace_if_greater 777706
 show

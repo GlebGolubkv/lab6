@@ -7,15 +7,22 @@ import server.commands.Command;
 
 import server.postgres.CommandsDAO;
 
-
+/**
+ * Внутренняя команда аутентификации пользователя по имени и паролю.
+ */
 public class LogInUser extends Command {
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response execute(int clintId) {
         throw new IllegalArgumentException("Not supported");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response execute(String value1, int clintId) {
 
@@ -30,16 +37,25 @@ public class LogInUser extends Command {
         } else return new Response(false, "Username is invalid");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response execute(String value1, MusicBand value2, int clintId) {
         throw new IllegalArgumentException("Not supported");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response execute(MusicBand value1, int clintId) {
         throw new IllegalArgumentException("Not supported");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String commandInfo() {
         return "войти в аккаунт пользователя";

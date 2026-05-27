@@ -4,14 +4,23 @@ import server.commands.Command;
 import server.data.ClassesManager;
 import common.dataclasses.MusicBand;
 import common.Response;
-import common.dataclasses.Colors;
 
+/**
+ * Команда подсчёта элементов с заданным числом участников.
+ */
 public class CountByNumberOfParticipants extends Command {
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response execute(int client_id) {
         throw new IllegalArgumentException("Not supported");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response execute(String value1, int client_id) {
 
@@ -20,32 +29,41 @@ public class CountByNumberOfParticipants extends Command {
         long result;
         synchronized (classesManager) {
             result = classesManager.getCollection().keySet().stream()
-                    //Превратили в список значений numberOfParticipants
+                    
                     .map(e -> classesManager.getCollection().get(e).getNumberOfParticipants())
-                    // Отфильтровали совпадающие
+                    
                     .filter(e -> e == number_of_participants).count();
 
         }
         StringBuilder stringBuilder = new StringBuilder()
-                .append("The number participants of equal " + Colors.GREEN)
-                .append(number_of_participants).append(Colors.RESET).append("s is ")
-                .append(Colors.GREEN).append(result).append(Colors.RESET);
-
+                .append("The number participants of equal ")
+                .append(number_of_participants)
+                .append("s is ")
+                .append(result);
 
         return new Response(true, "CountByNumberOfParticipants successfully completed.", stringBuilder);
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response execute(String value1, MusicBand value2, int client_id) {
         throw new IllegalArgumentException("Not supported");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response execute(MusicBand value1, int client_id) {
         throw new IllegalArgumentException("Not supported");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String commandInfo() {
         return "вывести количество элементов, значение поля numberOfParticipants которых равно заданному";
@@ -53,7 +71,7 @@ public class CountByNumberOfParticipants extends Command {
 
     private int checkInteger(String key) {
         int newKey;
-        // если не является числом
+        
         try {
             newKey = Integer.parseInt(key);
         } catch (NumberFormatException e) {

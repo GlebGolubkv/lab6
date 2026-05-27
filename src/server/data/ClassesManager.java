@@ -1,41 +1,36 @@
 package server.data;
 
-
 import common.dataclasses.MusicBand;
+import common.dataclasses.MusicBandEntry;
 
-import common.dataclasses.Colors;
 import server.postgres.CommandsDAO;
 
-
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
 /**
- * Manages the collection of MusicBand objects, providing access and modification methods.
- * Implements the Singleton pattern to ensure a single instance of the collection manager.
- * The collection is stored in a Hashtable with Integer keys and MusicBand values.
+ * Менеджер in-memory коллекции музыкальных групп, синхронизированной с PostgreSQL.
  */
 public class ClassesManager {
     private static ClassesManager instance;
 
     private final Map<Integer, MusicBand> collection = Collections.synchronizedMap(new HashMap<Integer, MusicBand>());
+    private final Map<Integer, Integer> ownersByKey = new HashMap<>();
 
-
-    /**
-     * Private constructor that initializes the collection by reading data from a file.
-     */
     private ClassesManager() {
         collection.putAll(CommandsDAO.readFromPostgres());
+        ownersByKey.putAll(CommandsDAO.readBandKeyOwnerMap());
     }
 
     /**
-     * Returns the singleton instance of ClassesManager.
+     * Возвращает единственный экземпляр менеджера коллекции.
      *
-     * @return the singleton instance
-     * @throws RuntimeException if the manager has not been initialized yet
+     * @return инициализированный {@link ClassesManager}
+     * @throws RuntimeException если менеджер не инициализирован
      */
     public static ClassesManager getInstance() {
         if (instance == null) {
@@ -45,12 +40,11 @@ public class ClassesManager {
     }
 
     /**
-     * Initializes the singleton instance with the specified file name.
+     * Инициализирует менеджер коллекции (загрузка данных из БД).
      *
-     * @throws RuntimeException if the manager is already initialized
+     * @throws RuntimeException если менеджер уже инициализирован
      */
     public static synchronized void initialize() {
-
 
         if (instance == null) {
             instance = new ClassesManager();
@@ -58,77 +52,98 @@ public class ClassesManager {
             throw new RuntimeException("ClassesManager already initialized");
         }
 
-
     }
 
-
     /**
-     * Returns the current size of the collection.
+     * Возвращает текущий размер коллекции.
      *
-     * @return the number of elements in the collection
+     * @return количество элементов
      */
     public int mapSize() {
         return getActiveMap().size();
     }
 
-
     /**
-     * Returns a formatted string describing the type of the collection.
+     * Возвращает строковое описание типа коллекции.
      *
-     * @return a colored string with the collection type information
+     * @return имя класса коллекции
      */
     public String getCollectionType() {
-        return Colors.GREEN + "Collection Type: " + Colors.RESET + getActiveMap().getClass().getName();
+        return "Collection Type: " + getActiveMap().getClass().getName();
     }
 
-
     /**
-     * Returns the underlying Hashtable that stores the collection.
+     * Возвращает синхронизированную карту коллекции (ключ — идентификатор группы в коллекции).
      *
-     * @return the Hashtable containing MusicBand objects keyed by Integer
+     * @return карта коллекции
      */
     public Map<Integer, MusicBand> getCollection() {
         return getActiveMap();
     }
 
     /**
-     * Adds a MusicBand object to the collection with the specified key.
+     * Добавляет музыкальную группу в коллекцию по ключу.
      *
-     * @param key the key associated with the MusicBand
-     * @param mb  the MusicBand object to add
+     * @param key     ключ элемента
+     * @param mb      музыкальная группа
+     * @param ownerId идентификатор владельца
      */
-    public void addMusicBandToCollection(int key, MusicBand mb) {
-        getActiveMap().put(key, mb);
+    public void addMusicBandToCollection(int key, MusicBand mb, int ownerId) {
+        synchronized (collection) {
+            getActiveMap().put(key, mb);
+            ownersByKey.put(key, ownerId);
+        }
     }
 
     /**
-     * Removes the MusicBand object associated with the specified key from the collection.
+     * Удаляет элемент коллекции по ключу.
      *
-     * @param key the key of the MusicBand to remove
+     * @param key ключ элемента
      */
     public void removeMusicBandFromCollection(int key) {
-        getActiveMap().remove(key);
+        synchronized (collection) {
+            getActiveMap().remove(key);
+            ownersByKey.remove(key);
+        }
     }
 
     /**
-     * Checks whether the specified key exists in the collection.
+     * Формирует список записей коллекции с ключом и владельцем (для GUI).
      *
-     * @param key the key to check
-     * @return true if the key is present, false otherwise
+     * @return снимок коллекции в виде {@link MusicBandEntry}
+     */
+    public List<MusicBandEntry> getCollectionEntries() {
+        List<MusicBandEntry> entries = new ArrayList<>();
+        synchronized (collection) {
+            for (Map.Entry<Integer, MusicBand> entry : getActiveMap().entrySet()) {
+                int key = entry.getKey();
+                int ownerId = ownersByKey.getOrDefault(key, 0);
+                entries.add(new MusicBandEntry(key, ownerId, entry.getValue()));
+            }
+        }
+        return entries;
+    }
+
+    /**
+     * Проверяет наличие ключа в коллекции.
+     *
+     * @param key ключ элемента
+     * @return {@code true}, если ключ присутствует
      */
     public boolean keyInMap(int key) {
         return getActiveMap().containsKey(key);
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         synchronized (collection) {
             StringBuilder s = new StringBuilder();
             for (Integer key : getActiveMap().keySet()) {
-                s.append(Colors.GREEN)
-                        .append("Key: ").append(Colors.RESET).append(key).append("\n")
-                        .append(Colors.GREEN).append(" Value: ").append(Colors.RESET)
+                s.append("Key: ").append(key).append("\n")
+                        .append(" Value: ")
                         .append(getActiveMap().get(key).toString()).append("\n");
 
             }
@@ -136,18 +151,21 @@ public class ClassesManager {
         }
     }
 
+    /**
+     * Формирует строковое представление коллекции, отсортированное по имени группы.
+     *
+     * @return текстовое описание всех элементов
+     */
     public String showCollection() {
         synchronized (collection) {
             return getActiveMap().keySet()
                     .stream()
                     .sorted((a, b) -> (getActiveMap().get(b).getName().compareTo(getActiveMap().get(a).getName())))
-                    .map(key -> Colors.GREEN + "Key: " + Colors.RESET + key + Colors.GREEN +
-                            "\nValue: " + Colors.RESET + getActiveMap().get(key).toString() + Colors.RESET + "\n")
+                    .map(key -> "Key: " + key + "\nValue: " + getActiveMap().get(key).toString() + "\n")
                     .collect(Collectors.joining());
         }
 
     }
-
 
     private Map<Integer, MusicBand> getActiveMap() {
         return collection;

@@ -11,7 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
- * Lab 8 login / registration window.
+ * Окно авторизации и регистрации: подключение к серверу, выбор языка интерфейса.
  */
 public class AuthView {
 
@@ -27,10 +27,16 @@ public class AuthView {
     private ComboBox<java.util.Locale> languageBox;
     private Stage stage;
 
+    /**
+     * @param onSuccess обработчик успешного входа; получает созданную {@link Session}
+     */
     public AuthView(java.util.function.Consumer<Session> onSuccess) {
         this.onSuccess = onSuccess;
     }
 
+    /**
+     * Создаёт и отображает окно входа.
+     */
     public void show() {
         stage = new Stage();
         hostField = new TextField("localhost");
@@ -39,6 +45,7 @@ public class AuthView {
         passwordField = new PasswordField();
         statusLabel = new Label();
         languageBox = new ComboBox<>(javafx.collections.FXCollections.observableArrayList(Localization.SUPPORTED));
+        wireLanguageSelector();
         languageBox.setValue(loc.getLocale());
         languageBox.valueProperty().addListener((o, a, b) -> {
             if (b != null) {
@@ -93,6 +100,29 @@ public class AuthView {
         stage.setScene(scene);
         refreshTexts();
         stage.show();
+    }
+
+    private void wireLanguageSelector() {
+        languageBox.setCellFactory(cb -> new ListCell<>() {
+            /**
+             * Показывает локализованное название языка в списке выбора.
+             */
+            @Override
+            protected void updateItem(java.util.Locale item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : loc.displayName(item));
+            }
+        });
+        languageBox.setButtonCell(new ListCell<>() {
+            /**
+             * Показывает выбранный язык на кнопке комбобокса.
+             */
+            @Override
+            protected void updateItem(java.util.Locale item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : loc.displayName(item));
+            }
+        });
     }
 
     private void refreshTexts() {

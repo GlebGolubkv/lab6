@@ -8,19 +8,30 @@ import server.postgres.CommandsDAO;
 
 import java.util.Map;
 
+/**
+ * Команда обновления элемента коллекции по идентификатору объекта.
+ */
 public class Update extends Command {
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response execute(int client_id) {
         throw new IllegalArgumentException("Not supported");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response execute(String value1, int client_id) {
         throw new IllegalArgumentException("Not supported");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response execute(String value1, MusicBand value2, int client_id) {
         Map<Integer, MusicBand> collection = ClassesManager.getInstance().getCollection();
@@ -36,20 +47,31 @@ public class Update extends Command {
         }
         return new Response(false, "Update failed.There is no object with this ID. ID: " + id, stringBuilder);
 
-
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response execute(MusicBand value1, int client_id) {
         throw new IllegalArgumentException("Not supported");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String commandInfo() {
         return "обновить значение элемента коллекции, id которого равен заданному";
     }
 
-
+    /**
+     * Удаляет элемент коллекции по идентификатору объекта и возвращает его ключ.
+     *
+     * @param ID            идентификатор музыкальной группы
+     * @param stringBuilder буфер для сообщения о заменяемом объекте
+     * @return ключ удалённого элемента
+     */
     public int removeBandByID(int ID, StringBuilder stringBuilder) {
         Map<Integer, MusicBand> map = ClassesManager.getInstance().getCollection();
 

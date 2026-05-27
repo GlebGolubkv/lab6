@@ -1,53 +1,53 @@
-package server.commands.clientcommands;
+package server.commands.internalcommands;
 
 import common.Response;
 import common.dataclasses.MusicBand;
-import common.dataclasses.MusicBandEntry;
 import server.commands.Command;
 import server.data.ClassesManager;
-import server.postgres.CommandsDAO;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
- * Returns the in-memory collection with band keys and owner ids (for GUI).
+ * Команда получения коллекции с метаданными (ключ, владелец) для GUI-клиента.
  */
 public class GetCollection extends Command {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response execute(int clientId) {
         if (clientId <= 0) {
             return new Response(false, "Authorization required");
         }
-        Map<Integer, MusicBand> collection = ClassesManager.getInstance().getCollection();
-        List<MusicBandEntry> entries = new ArrayList<>();
-        synchronized (collection) {
-            for (Map.Entry<Integer, MusicBand> entry : collection.entrySet()) {
-                int key = entry.getKey();
-                int ownerId = CommandsDAO.findOwnerIdFromBandKey(key);
-                entries.add(new MusicBandEntry(key, ownerId, entry.getValue()));
-            }
-        }
-        return new Response(true, "Collection loaded", entries);
+        return new Response(true, "Collection loaded", ClassesManager.getInstance().getCollectionEntries());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response execute(String value1, int clientId) {
         throw new IllegalArgumentException("Not supported");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response execute(String value1, MusicBand value2, int clientId) {
         throw new IllegalArgumentException("Not supported");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response execute(MusicBand value1, int clientId) {
         throw new IllegalArgumentException("Not supported");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String commandInfo() {
         return "получить коллекцию с метаданными для GUI";

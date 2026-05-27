@@ -1,32 +1,27 @@
 package common.dataclasses;
 
 /**
- * Represents the coordinates of a music band.
- * Contains x and y coordinates with specific value constraints.
+ * Координаты группы на плоскости: {@code x} — целое, {@code y} — вещественное.
+ * При создании проверяются верхние границы: x ≤ 254, y ≤ 93.
  */
 public class Coordinates {
-    /**
-     * The x-coordinate. Maximum allowed value is 254.
-     */
-    private int x; //Максимальное значение поля: 254
+
+    private int x;
+
+    private double y;
 
     /**
-     * The y-coordinate. Maximum allowed value is 93.
-     */
-    private double y; //Максимальное значение поля: 93
-
-    /**
-     * Default constructor for Coordinates.
+     * Конструктор по умолчанию для десериализации JSON.
      */
     public Coordinates() {
     }
 
     /**
-     * Constructs a Coordinates object with the specified x and y values.
+     * Создаёт координаты с проверкой ограничений коллекции.
      *
-     * @param x the x-coordinate, must be less than 255
-     * @param y the y-coordinate, must be less than 93
-     * @throws IllegalArgumentException if x >= 255 or y >= 93
+     * @param x координата X (не больше 254)
+     * @param y координата Y (не больше 93)
+     * @throws IllegalArgumentException при нарушении границ
      */
     public Coordinates(int x, double y) {
 
@@ -40,50 +35,25 @@ public class Coordinates {
         this.y = y;
     }
 
-    /**
-     * Returns the x-coordinate.
-     *
-     * @return the x value
-     */
     public int getX() {
         return x;
     }
 
-    /**
-     * Returns the y-coordinate.
-     *
-     * @return the y value
-     */
     public double getY() {
         return y;
     }
 
-    /**
-     * Sets the x-coordinate.
-     *
-     * @param x the new x value (constraints should be enforced by caller)
-     */
     public void setX(int x) {
         this.x = x;
     }
 
-    /**
-     * Sets the y-coordinate.
-     *
-     * @param y the new y value (constraints should be enforced by caller)
-     */
     public void setY(double y) {
         this.y = y;
     }
 
-    /**
-     * Returns a string representation of the Coordinates object with color formatting.
-     *
-     * @return a colored string containing the coordinates
-     */
     @Override
     public String toString() {
-        return Colors.WHITE + "Coordinates{" + "x=" + Colors.RESET + x + Colors.WHITE + ", y=" + Colors.RESET + y + Colors.WHITE + '}' + Colors.RESET;
+        return "Coordinates{x=" + x + ", y=" + y + '}';
     }
 
 }

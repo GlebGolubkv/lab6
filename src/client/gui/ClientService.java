@@ -1,6 +1,5 @@
 package client.gui;
 
-import client.ClientInitializer;
 import client.ClientNetworkManager;
 import common.Request;
 import common.Response;
@@ -14,7 +13,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Sends requests to the server off the JavaFX application thread.
+ * Асинхронная отправка запросов на сервер из потока GUI (без блокировки интерфейса).
  */
 public class ClientService {
 
@@ -24,20 +23,25 @@ public class ClientService {
         return t;
     });
 
+    /**
+     * Создаёт службу асинхронных запросов к серверу для GUI-клиента.
+     */
     public ClientService() {
-        ClientInitializer.initialize();
+
     }
 
-    public CompletableFuture<Response> sendAsync(Request request, ClientNetworkManager manager) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                return manager.sendRequest(request);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }, EXECUTOR);
-    }
 
+
+    /**
+     * Выполняет вход или регистрацию и при успехе возвращает {@link Session}.
+     *
+     * @param host     адрес сервера
+     * @param port     порт
+     * @param username имя пользователя
+     * @param password пароль
+     * @param register {@code true} — регистрация, {@code false} — вход
+     * @return сессия или исключение при ошибке
+     */
     public CompletableFuture<Session> authenticate(String host, int port, String username, String password, boolean register) {
         return CompletableFuture.supplyAsync(() -> {
             try {
@@ -57,6 +61,12 @@ public class ClientService {
         }, EXECUTOR);
     }
 
+    /**
+     * Загружает коллекцию музыкальных групп текущего пользователя.
+     *
+     * @param session активная сессия
+     * @return список записей коллекции
+     */
     public CompletableFuture<List<MusicBandEntry>> fetchCollection(Session session) {
         Request request = new Request(CommandType.GET_COLLECTION, null, null, session.getUserId());
         return CompletableFuture.supplyAsync(() -> {
@@ -72,6 +82,15 @@ public class ClientService {
         }, EXECUTOR);
     }
 
+    /**
+     * Выполняет команду сервера от имени текущего пользователя.
+     *
+     * @param session   активная сессия
+     * @param type      тип команды
+     * @param argument  строковый аргумент команды
+     * @param band      объект группы (для команд с телом) или {@code null}
+     * @return ответ сервера
+     */
     public CompletableFuture<Response> runCommand(Session session, CommandType type, String argument, MusicBand band) {
         Request request = new Request(type, argument, band, session.getUserId());
         return CompletableFuture.supplyAsync(() -> {

@@ -5,40 +5,26 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 /**
- * Provides a configured Jackson ObjectMapper for JSON processing.
- * Configures the mapper with JavaTimeModule for Java 8 date/time support,
- * enables pretty-printing, and disables writing dates as timestamps.
- * Implements the Singleton pattern to provide a single, consistently configured mapper.
+ * Синглтон-обёртка над {@link ObjectMapper} для сериализации данных клиента и сервера.
+ * Компактный JSON (без отступов), даты в ISO-формате.
  */
 public class JsonDataMapper {
 
     private static JsonDataMapper instance;
-    /**
-     * The configured ObjectMapper instance.
-     */
+
     private final ObjectMapper mapper;
 
-    /**
-     * Private constructor that initializes and configures the ObjectMapper.
-     * Registers the JavaTimeModule, enables pretty-printing, and disables timestamp writing.
-     */
     private JsonDataMapper() {
-
         this.mapper = new ObjectMapper();
-        //регаем новый модуль
         mapper.registerModule(new JavaTimeModule());
-        //выставляем читаемую запись в файле
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        //выставляем отображение времени в файле
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
     }
 
     /**
-     * Returns the singleton instance of JsonDataMapper.
+     * Возвращает инициализированный маппер.
      *
-     * @return the singleton instance
-     * @throws NullPointerException if the instance has not been initialized
+     * @return экземпляр {@code JsonDataMapper}
+     * @throws NullPointerException если {@link #initialize()} ещё не вызывался
      */
     public static JsonDataMapper getInstance() {
         if (instance == null) {
@@ -48,10 +34,9 @@ public class JsonDataMapper {
     }
 
     /**
-     * Initializes the singleton instance of JsonDataMapper.
-     * Must be called once before using the instance.
+     * Создаёт единственный экземпляр с настроенным {@link ObjectMapper}.
      *
-     * @throws IllegalStateException if the instance has already been initialized
+     * @throws IllegalStateException при повторной инициализации
      */
     public static void initialize() {
         if (instance == null) {
@@ -62,9 +47,9 @@ public class JsonDataMapper {
     }
 
     /**
-     * Returns the configured ObjectMapper.
+     * Возвращает настроенный {@link ObjectMapper} для сериализации и десериализации.
      *
-     * @return the ObjectMapper instance
+     * @return экземпляр Jackson {@code ObjectMapper}
      */
     public ObjectMapper getMapper() {
         return mapper;

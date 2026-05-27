@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Инициализация и выдача JDBC-соединений с PostgreSQL.
+ */
 public class ConnectionInitializer {
 
     private static ConnectionInitializer instance;
@@ -11,11 +14,14 @@ public class ConnectionInitializer {
     private final String user = "glebgolubkov";
     private final String password = "";
 
-
     private ConnectionInitializer() {
     }
 
-
+    /**
+     * Инициализирует подключение к БД (выполняется один раз).
+     *
+     * @throws IllegalStateException при повторной инициализации
+     */
     public static synchronized void initialize() {
         if (instance == null) {
             instance = new ConnectionInitializer();
@@ -24,7 +30,12 @@ public class ConnectionInitializer {
         }
     }
 
-
+    /**
+     * Возвращает единственный экземпляр инициализатора соединений.
+     *
+     * @return инициализированный {@link ConnectionInitializer}
+     * @throws IllegalStateException если {@link #initialize()} не вызывался
+     */
     public static ConnectionInitializer getInstance() {
         if (instance == null) {
             throw new IllegalStateException("Not initialized. Call initialize() first.");
@@ -32,7 +43,12 @@ public class ConnectionInitializer {
         return instance;
     }
 
-    // Получить соединение с БД
+    /**
+     * Открывает новое соединение с базой данных.
+     *
+     * @return JDBC-соединение
+     * @throws SQLException при ошибке подключения
+     */
     public  Connection getConnection() throws SQLException {
         return DriverManager.getConnection(url, user, password);
     }

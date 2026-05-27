@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html","k":"18"},{"l":"commandsmanager"},{"l":"commandsmanager.сommands"},{"l":"data"},{"l":"dataclasses"},{"l":"filemanager.commandsparser"},{"l":"filemanager.json"},{"l":"termenalmanager"}];updateSearchResults();
